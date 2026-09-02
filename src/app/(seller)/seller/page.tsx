@@ -267,7 +267,10 @@ export default function SellerPortalPage() {
                   Manage product variants, photos, descriptions, and two-tier inventory.
                 </p>
               </Link>
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-2">
+              <Link
+                href="/seller/orders"
+                className="bg-white p-5 rounded-2xl border border-slate-200 space-y-2 hover:border-emerald-500 hover:shadow-xs transition block"
+              >
                 <div className="flex items-center gap-2 text-slate-900 font-bold text-xs">
                   <ShoppingBag className="h-4 w-4 text-emerald-600" />
                   <span>Fulfillment Orders</span>
@@ -275,7 +278,7 @@ export default function SellerPortalPage() {
                 <p className="text-[11px] text-slate-500">
                   View pending buyer purchases, prepare items, and hand over to riders.
                 </p>
-              </div>
+              </Link>
               <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-2">
                 <div className="flex items-center gap-2 text-slate-900 font-bold text-xs">
                   <TrendingUp className="h-4 w-4 text-emerald-600" />

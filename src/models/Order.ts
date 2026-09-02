@@ -13,6 +13,7 @@ export interface IOrderItem {
 export interface ISellerOrder {
   sellerOrderId: string; // e.g. NM-10045-A
   storeId: mongoose.Types.ObjectId;
+  storeName: string;
   sellerId: mongoose.Types.ObjectId;
   status:
     | "PENDING"
@@ -27,12 +28,15 @@ export interface ISellerOrder {
   deliveryFee: number;
   commissionAmount: number;
   sellerEarning: number;
+  prepTimeMinutes?: number;
   deliveryId?: mongoose.Types.ObjectId;
 }
 
 export interface IOrder extends Document {
   orderNumber: string; // e.g. NM-10045
   customerId: mongoose.Types.ObjectId;
+  deliveryOtp: string; // 4-digit code given to rider upon package handoff
+  fulfillmentType: "LOCAL_DELIVERY" | "STORE_PICKUP";
   status:
     | "CREATED"
     | "PAYMENT_PENDING"
@@ -90,6 +94,7 @@ const SellerOrderSchema = new Schema<ISellerOrder>(
   {
     sellerOrderId: { type: String, required: true },
     storeId: { type: Schema.Types.ObjectId, ref: "Store", required: true },
+    storeName: { type: String, required: true },
     sellerId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     status: {
       type: String,
@@ -109,6 +114,7 @@ const SellerOrderSchema = new Schema<ISellerOrder>(
     deliveryFee: { type: Number, required: true, default: 0 },
     commissionAmount: { type: Number, required: true, default: 0 },
     sellerEarning: { type: Number, required: true },
+    prepTimeMinutes: { type: Number, default: 30 },
     deliveryId: { type: Schema.Types.ObjectId, ref: "Delivery" },
   },
   { _id: false }
@@ -118,6 +124,12 @@ const OrderSchema = new Schema<IOrder>(
   {
     orderNumber: { type: String, required: true, unique: true, index: true },
     customerId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    deliveryOtp: { type: String, required: true },
+    fulfillmentType: {
+      type: String,
+      enum: ["LOCAL_DELIVERY", "STORE_PICKUP"],
+      default: "LOCAL_DELIVERY",
+    },
     status: {
       type: String,
       enum: [
