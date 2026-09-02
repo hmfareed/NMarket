@@ -6,3 +6,4 @@ export * from "./DeliveryZone";
 export * from "./VerificationToken";
 export * from "./Category";
 export * from "./Delivery";
+export * from "./Payout";
