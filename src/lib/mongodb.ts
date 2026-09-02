@@ -1,4 +1,14 @@
 import mongoose from "mongoose";
+import dns from "node:dns";
+
+// Ensure Node's DNS resolver can resolve MongoDB Atlas SRV records on Windows
+if (typeof dns.setServers === "function") {
+  try {
+    dns.setServers(["8.8.8.8", "1.1.1.1"]);
+  } catch {
+    // Fallback gracefully
+  }
+}
 
 declare global {
   // eslint-disable-next-line no-var
