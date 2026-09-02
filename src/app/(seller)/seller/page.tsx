@@ -212,10 +212,13 @@ export default function SellerPortalPage() {
               </div>
 
               <div className="flex items-center gap-2">
-                <button className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-4 rounded-xl transition shadow-xs">
+                <Link
+                  href="/seller/products/new"
+                  className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-4 rounded-xl transition shadow-xs"
+                >
                   <PlusCircle className="h-4 w-4" />
                   <span>Add New Product</span>
-                </button>
+                </Link>
               </div>
             </div>
 
@@ -233,11 +236,14 @@ export default function SellerPortalPage() {
                 </p>
                 <p className="text-[11px] text-emerald-600 font-semibold mt-1">Top Merchant</p>
               </div>
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+              <Link
+                href="/seller/products"
+                className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:border-emerald-300 transition block"
+              >
                 <p className="text-xs font-semibold text-slate-500">Active Products</p>
-                <p className="text-2xl font-black text-slate-900 mt-1">0</p>
-                <p className="text-[11px] text-slate-400 mt-1">Add items to launch</p>
-              </div>
+                <p className="text-2xl font-black text-slate-900 mt-1">Manage →</p>
+                <p className="text-[11px] text-emerald-600 mt-1 font-semibold">View catalog</p>
+              </Link>
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
                 <p className="text-xs font-semibold text-slate-500">MoMo Payout Account</p>
                 <p className="text-sm font-black text-slate-900 mt-1 truncate">
@@ -249,7 +255,10 @@ export default function SellerPortalPage() {
 
             {/* Quick Actions Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-2">
+              <Link
+                href="/seller/products"
+                className="bg-white p-5 rounded-2xl border border-slate-200 space-y-2 hover:border-emerald-500 hover:shadow-xs transition block"
+              >
                 <div className="flex items-center gap-2 text-slate-900 font-bold text-xs">
                   <Package className="h-4 w-4 text-emerald-600" />
                   <span>Product Catalog</span>
@@ -257,7 +266,7 @@ export default function SellerPortalPage() {
                 <p className="text-[11px] text-slate-500">
                   Manage product variants, photos, descriptions, and two-tier inventory.
                 </p>
-              </div>
+              </Link>
               <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-2">
                 <div className="flex items-center gap-2 text-slate-900 font-bold text-xs">
                   <ShoppingBag className="h-4 w-4 text-emerald-600" />
