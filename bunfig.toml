@@ -1,0 +1,3 @@
+[install]
+cache = { dir = "C:/bun-cache" }
+backend = "copyfile"
