@@ -26,6 +26,17 @@ export interface IStore extends Document {
     pickupAddress: string;
     landmark?: string;
   };
+  businessType: "INDIVIDUAL" | "REGISTERED_BUSINESS";
+  ghanaCardNumber: string; // e.g. GHA-XXXXXXXXX-X
+  businessRegistrationNumber?: string;
+  payoutInfo: {
+    provider: "MTN_MOMO" | "TELECEL_CASH" | "AIRTELTIGO_MONEY" | "BANK";
+    accountNumber: string;
+    accountName: string;
+  };
+  adminNotes?: string;
+  verifiedAt?: Date;
+  rejectedReason?: string;
   deliverySettings: {
     supportsLocalDelivery: boolean;
     prepTimeMinutes: number;
@@ -76,6 +87,26 @@ const StoreSchema = new Schema<IStore>(
       pickupAddress: { type: String, required: true },
       landmark: { type: String },
     },
+    businessType: {
+      type: String,
+      enum: ["INDIVIDUAL", "REGISTERED_BUSINESS"],
+      default: "INDIVIDUAL",
+    },
+    ghanaCardNumber: { type: String, required: true, trim: true },
+    businessRegistrationNumber: { type: String, trim: true },
+    payoutInfo: {
+      provider: {
+        type: String,
+        enum: ["MTN_MOMO", "TELECEL_CASH", "AIRTELTIGO_MONEY", "BANK"],
+        required: true,
+        default: "MTN_MOMO",
+      },
+      accountNumber: { type: String, required: true, trim: true },
+      accountName: { type: String, required: true, trim: true },
+    },
+    adminNotes: { type: String },
+    verifiedAt: { type: Date },
+    rejectedReason: { type: String },
     deliverySettings: {
       supportsLocalDelivery: { type: Boolean, default: true },
       prepTimeMinutes: { type: Number, default: 30 },

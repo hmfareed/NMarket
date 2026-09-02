@@ -1,9 +1,78 @@
-import Link from "next/link";
-import { Store, TrendingUp, ShieldAlert, CheckCircle2, ArrowRight } from "lucide-react";
+"use client";
 
-export default function SellerLandingPage() {
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import {
+  Store,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  Package,
+  ShoppingBag,
+  TrendingUp,
+  MapPin,
+  ArrowRight,
+  ShieldCheck,
+  PlusCircle,
+  Loader2,
+} from "lucide-react";
+
+interface StoreData {
+  _id: string;
+  name: string;
+  slug: string;
+  phone: string;
+  verificationStatus: "PENDING" | "UNDER_REVIEW" | "VERIFIED" | "REJECTED" | "SUSPENDED";
+  address: {
+    area: string;
+    pickupAddress: string;
+  };
+  ghanaCardNumber: string;
+  payoutInfo: {
+    provider: string;
+    accountNumber: string;
+    accountName: string;
+  };
+  performance: {
+    rating: number;
+    totalOrders: number;
+    score: number;
+  };
+  rejectedReason?: string;
+  createdAt: string;
+}
+
+export default function SellerPortalPage() {
+  const [loading, setLoading] = useState(true);
+  const [store, setStore] = useState<StoreData | null>(null);
+
+  useEffect(() => {
+    async function loadStore() {
+      try {
+        const res = await fetch("/api/seller/store");
+        if (res.ok) {
+          const data = await res.json();
+          setStore(data.store);
+        }
+      } catch (err) {
+        console.error("Failed to load store status:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadStore();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Seller Header */}
       <header className="bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -15,74 +84,201 @@ export default function SellerLandingPage() {
               NMarket <span className="text-emerald-600 font-medium text-sm">Merchant</span>
             </span>
           </Link>
-          <Link
-            href="/"
-            className="text-xs text-slate-500 hover:text-slate-800 font-medium"
-          >
-            ← Back to Customer Market
-          </Link>
+          <div className="flex items-center gap-3">
+            {store?.verificationStatus === "VERIFIED" && (
+              <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full border border-emerald-200">
+                <CheckCircle2 className="h-3 w-3" />
+                <span>Verified Seller</span>
+              </span>
+            )}
+            <Link
+              href="/"
+              className="text-xs text-slate-500 hover:text-slate-800 font-medium"
+            >
+              ← Customer Market
+            </Link>
+          </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
-        <div className="bg-white rounded-3xl border border-slate-200 p-8 sm:p-12 shadow-sm">
-          <div className="max-w-2xl space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold">
-              <Store className="h-3.5 w-3.5" />
-              <span>Grow Your Business in Northern Ghana</span>
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
+        {/* CASE 1: NO STORE YET -> ONBOARDING CTA */}
+        {!store && (
+          <div className="bg-white rounded-3xl border border-slate-200 p-8 sm:p-12 shadow-sm text-center max-w-2xl mx-auto my-6">
+            <div className="inline-flex p-3 rounded-2xl bg-emerald-50 text-emerald-600 mb-4">
+              <Store className="h-8 w-8" />
             </div>
-            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-              Sell to thousands of customers across Tamale with fast local delivery.
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              Start Selling to Customers Across Tamale
             </h1>
-            <p className="text-slate-600 text-base leading-relaxed">
-              Reach more customers in Lamashegu, Jisonayili, Vittin, and Sakasaka.
-              When an order comes in, pack it, hand it to a local delivery rider,
-              and receive automated payouts directly to your Mobile Money wallet.
+            <p className="text-slate-600 text-sm mt-3 leading-relaxed">
+              Register your business in Lamashegu, Central Market, Vittin, or Sakasaka.
+              Set your pickup location, verify your Ghana Card, and start getting fast local orders.
             </p>
-          </div>
-
-          {/* Value points */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 my-8">
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-              <TrendingUp className="h-6 w-6 text-emerald-600 mb-2" />
-              <h3 className="font-bold text-slate-900 text-sm">More Local Sales</h3>
-              <p className="text-xs text-slate-500 mt-1">
-                Your products are ranked first for nearby buyers in your community.
-              </p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-              <CheckCircle2 className="h-6 w-6 text-emerald-600 mb-2" />
-              <h3 className="font-bold text-slate-900 text-sm">Fast MoMo Settlements</h3>
-              <p className="text-xs text-slate-500 mt-1">
-                Earnings clear upon verified OTP customer delivery.
-              </p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-              <ShieldAlert className="h-6 w-6 text-emerald-600 mb-2" />
-              <h3 className="font-bold text-slate-900 text-sm">Vetted Marketplace</h3>
-              <p className="text-xs text-slate-500 mt-1">
-                Fair dispute resolution and protection against fake orders.
-              </p>
+            <div className="mt-6">
+              <Link
+                href="/seller/onboarding"
+                className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-3 px-6 rounded-xl shadow-sm transition"
+              >
+                <span>Complete Seller Registration</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
           </div>
+        )}
 
-          {/* Registration Box */}
-          <div className="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
-              <p className="text-sm font-bold text-slate-900">
-                Ready to register your store?
-              </p>
-              <p className="text-xs text-slate-500">
-                Requires Ghana Card / Business details & pickup location.
+        {/* CASE 2: PENDING / UNDER REVIEW */}
+        {store && (store.verificationStatus === "PENDING" || store.verificationStatus === "UNDER_REVIEW") && (
+          <div className="bg-white rounded-3xl border border-slate-200 p-8 shadow-xs max-w-2xl mx-auto my-6 space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-amber-100 text-amber-700">
+                <Clock className="h-6 w-6 animate-pulse" />
+              </div>
+              <div>
+                <h2 className="text-lg font-black text-slate-900">
+                  Application Under Review
+                </h2>
+                <p className="text-xs text-slate-500">
+                  Your store application for <span className="font-bold text-slate-800">{store.name}</span> is being verified.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-4 space-y-2.5 text-xs">
+              <div className="flex justify-between">
+                <span className="text-slate-500">Tamale Community:</span>
+                <span className="font-bold text-slate-900">{store.address.area} ({store.address.pickupAddress})</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Ghana Card:</span>
+                <span className="font-mono font-bold text-slate-900">{store.ghanaCardNumber}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">MoMo Payout:</span>
+                <span className="font-bold text-slate-900">
+                  {store.payoutInfo.provider} — {store.payoutInfo.accountNumber} ({store.payoutInfo.accountName})
+                </span>
+              </div>
+            </div>
+
+            <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800">
+              <p className="font-bold">Estimated review time: 2–4 business hours</p>
+              <p className="mt-0.5 text-[11px] leading-relaxed">
+                You will be able to publish products as soon as our Tamale operations team verifies your details.
               </p>
             </div>
-            <button className="w-full sm:w-auto flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm px-6 py-3 rounded-xl transition shadow-sm">
-              <span>Start Seller Application</span>
+          </div>
+        )}
+
+        {/* CASE 3: REJECTED */}
+        {store && store.verificationStatus === "REJECTED" && (
+          <div className="bg-white rounded-3xl border border-red-200 p-8 shadow-xs max-w-2xl mx-auto my-6 space-y-4">
+            <div className="flex items-center gap-3 text-red-700">
+              <AlertCircle className="h-6 w-6" />
+              <h2 className="text-lg font-black text-slate-900">
+                Application Needs Attention
+              </h2>
+            </div>
+            <p className="text-xs text-slate-600">
+              Reason provided: <strong>{store.rejectedReason || "Information incomplete or unverified."}</strong>
+            </p>
+            <Link
+              href="/seller/onboarding"
+              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-5 rounded-xl transition"
+            >
+              <span>Update Application Details</span>
               <ArrowRight className="h-4 w-4" />
-            </button>
+            </Link>
           </div>
-        </div>
+        )}
+
+        {/* CASE 4: VERIFIED MERCHANT DASHBOARD */}
+        {store && store.verificationStatus === "VERIFIED" && (
+          <div className="space-y-6">
+            {/* Store Banner */}
+            <div className="bg-white rounded-3xl border border-slate-200 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-2xl font-black text-slate-900">{store.name}</h1>
+                  <span className="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldCheck className="h-3 w-3" />
+                    <span>Verified</span>
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                  <MapPin className="h-3.5 w-3.5 text-slate-400" />
+                  <span>{store.address.area}, Tamale ({store.address.pickupAddress})</span>
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-4 rounded-xl transition shadow-xs">
+                  <PlusCircle className="h-4 w-4" />
+                  <span>Add New Product</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Merchant KPI Quick Stats */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+                <p className="text-xs font-semibold text-slate-500">Today's Sales</p>
+                <p className="text-2xl font-black text-slate-900 mt-1">₵0.00</p>
+                <p className="text-[11px] text-slate-400 mt-1">0 orders today</p>
+              </div>
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+                <p className="text-xs font-semibold text-slate-500">Store Rating</p>
+                <p className="text-2xl font-black text-slate-900 mt-1">
+                  ★ {store.performance?.rating || 5.0}
+                </p>
+                <p className="text-[11px] text-emerald-600 font-semibold mt-1">Top Merchant</p>
+              </div>
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+                <p className="text-xs font-semibold text-slate-500">Active Products</p>
+                <p className="text-2xl font-black text-slate-900 mt-1">0</p>
+                <p className="text-[11px] text-slate-400 mt-1">Add items to launch</p>
+              </div>
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+                <p className="text-xs font-semibold text-slate-500">MoMo Payout Account</p>
+                <p className="text-sm font-black text-slate-900 mt-1 truncate">
+                  {store.payoutInfo.accountNumber}
+                </p>
+                <p className="text-[11px] text-emerald-600 mt-1">{store.payoutInfo.provider}</p>
+              </div>
+            </div>
+
+            {/* Quick Actions Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2 text-slate-900 font-bold text-xs">
+                  <Package className="h-4 w-4 text-emerald-600" />
+                  <span>Product Catalog</span>
+                </div>
+                <p className="text-[11px] text-slate-500">
+                  Manage product variants, photos, descriptions, and two-tier inventory.
+                </p>
+              </div>
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2 text-slate-900 font-bold text-xs">
+                  <ShoppingBag className="h-4 w-4 text-emerald-600" />
+                  <span>Fulfillment Orders</span>
+                </div>
+                <p className="text-[11px] text-slate-500">
+                  View pending buyer purchases, prepare items, and hand over to riders.
+                </p>
+              </div>
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2 text-slate-900 font-bold text-xs">
+                  <TrendingUp className="h-4 w-4 text-emerald-600" />
+                  <span>Wallet & Payouts</span>
+                </div>
+                <p className="text-[11px] text-slate-500">
+                  Track pending and available sales balances and withdraw to your MoMo.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

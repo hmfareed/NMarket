@@ -71,9 +71,12 @@ export default function AdminDashboardPage() {
             <p className="text-xs text-slate-500">
               3 new merchants in Tamale submitted Ghana Card & store pickup details.
             </p>
-            <button className="w-full text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 py-2.5 rounded-xl transition">
-              Review Sellers (3)
-            </button>
+            <Link
+              href="/admin/sellers"
+              className="block text-center w-full text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-xl transition"
+            >
+              Open Seller Queue →
+            </Link>
           </div>
 
           <div className="bg-white p-6 rounded-2xl border border-slate-200 space-y-3">
