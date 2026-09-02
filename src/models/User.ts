@@ -41,6 +41,16 @@ export interface IUser extends Document {
     lastName: string;
     avatarUrl?: string;
   };
+  riderProfile?: {
+    vehicleType: "MOTORCYCLE" | "TRICYCLE" | "BICYCLE";
+    licensePlate?: string;
+    ghanaCardNumber?: string;
+    operatingZone: string;
+    isOnline: boolean;
+    currentEarnings: number;
+    totalCompletedDeliveries: number;
+    rating: number;
+  };
   addresses: IAddress[];
   createdAt: Date;
   updatedAt: Date;
@@ -102,6 +112,20 @@ const UserSchema = new Schema<IUser>(
       firstName: { type: String, trim: true },
       lastName: { type: String, trim: true },
       avatarUrl: { type: String },
+    },
+    riderProfile: {
+      vehicleType: {
+        type: String,
+        enum: ["MOTORCYCLE", "TRICYCLE", "BICYCLE"],
+        default: "MOTORCYCLE",
+      },
+      licensePlate: { type: String },
+      ghanaCardNumber: { type: String },
+      operatingZone: { type: String, default: "Tamale Central (Zone 1)" },
+      isOnline: { type: Boolean, default: false },
+      currentEarnings: { type: Number, default: 0 },
+      totalCompletedDeliveries: { type: Number, default: 0 },
+      rating: { type: Number, default: 5.0 },
     },
     addresses: [AddressSchema],
   },

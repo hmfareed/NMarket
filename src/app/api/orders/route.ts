@@ -159,6 +159,7 @@ export async function POST(req: Request) {
         region: "Northern Region",
         city: "Tamale",
         area: shippingAddress.area,
+        streetAddress: (shippingAddress.pickupAddress || shippingAddress.streetAddress)?.trim(),
         landmark: shippingAddress.landmark?.trim(),
         deliveryInstructions: shippingAddress.deliveryInstructions?.trim(),
       },

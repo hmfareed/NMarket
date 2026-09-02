@@ -62,6 +62,7 @@ export interface IOrder extends Document {
     region: string;
     city: string;
     area: string;
+    streetAddress?: string;
     landmark?: string;
     deliveryInstructions?: string;
     location?: {
@@ -164,6 +165,7 @@ const OrderSchema = new Schema<IOrder>(
       region: { type: String, required: true, default: "Northern Region" },
       city: { type: String, required: true, default: "Tamale" },
       area: { type: String, required: true },
+      streetAddress: { type: String },
       landmark: { type: String },
       deliveryInstructions: { type: String },
       location: {

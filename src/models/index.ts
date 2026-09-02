@@ -5,3 +5,4 @@ export * from "./Order";
 export * from "./DeliveryZone";
 export * from "./VerificationToken";
 export * from "./Category";
+export * from "./Delivery";
