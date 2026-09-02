@@ -10,15 +10,19 @@
     "seed:tamale": "bun src/scripts/seed-tamale.ts"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
+    "jose": "^6.2.10",
     "lucide-react": "^0.475.0",
     "mongoose": "^8.9.5",
     "next": "^15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "resend": "^6.25.0",
     "tailwind-merge": "^3.0.1"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
     "@types/node": "^22.13.4",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",

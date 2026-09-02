@@ -28,10 +28,14 @@ export interface IAddress {
 
 export interface IUser extends Document {
   email?: string;
-  phone: string;
+  phone?: string;
   passwordHash?: string;
   role: UserRole;
   status: "ACTIVE" | "SUSPENDED" | "PENDING_VERIFICATION";
+  isPhoneVerified: boolean;
+  isEmailVerified: boolean;
+  failedLoginAttempts: number;
+  lockoutUntil?: Date;
   customerProfile?: {
     firstName: string;
     lastName: string;
@@ -70,7 +74,7 @@ const AddressSchema = new Schema<IAddress>(
 const UserSchema = new Schema<IUser>(
   {
     email: { type: String, unique: true, sparse: true, lowercase: true, trim: true },
-    phone: { type: String, required: true, unique: true, trim: true },
+    phone: { type: String, unique: true, sparse: true, trim: true },
     passwordHash: { type: String },
     role: {
       type: String,
@@ -88,8 +92,12 @@ const UserSchema = new Schema<IUser>(
     status: {
       type: String,
       enum: ["ACTIVE", "SUSPENDED", "PENDING_VERIFICATION"],
-      default: "ACTIVE",
+      default: "PENDING_VERIFICATION",
     },
+    isPhoneVerified: { type: Boolean, default: false },
+    isEmailVerified: { type: Boolean, default: false },
+    failedLoginAttempts: { type: Number, default: 0 },
+    lockoutUntil: { type: Date },
     customerProfile: {
       firstName: { type: String, trim: true },
       lastName: { type: String, trim: true },

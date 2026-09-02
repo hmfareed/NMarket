@@ -94,6 +94,12 @@ export default function CustomerHome() {
                 <span>Sell on NMarket</span>
               </Link>
               <Link
+                href="/login"
+                className="flex items-center gap-1.5 text-slate-700 hover:text-emerald-600 font-bold px-3 py-1.5 rounded-lg hover:bg-slate-100 transition"
+              >
+                <span>Sign In</span>
+              </Link>
+              <Link
                 href="/rider"
                 className="hidden lg:flex items-center gap-1.5 text-slate-600 hover:text-emerald-600 font-medium px-3 py-1.5 rounded-lg hover:bg-slate-50 transition"
               >
