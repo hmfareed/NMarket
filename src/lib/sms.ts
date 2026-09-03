@@ -64,3 +64,54 @@ export async function sendSmsOtp({
     return { success: false, error: (err as Error).message };
   }
 }
+
+export interface SendCustomSmsParams {
+  phone: string;
+  message: string;
+}
+
+/**
+ * Dispatches a custom transactional SMS to a Ghanaian mobile number
+ */
+export async function sendCustomSms({
+  phone,
+  message,
+}: SendCustomSmsParams): Promise<{ success: boolean; error?: string }> {
+  const normalizedPhone = normalizeGhanaPhone(phone);
+  const smsApiKey = process.env.SMS_API_KEY;
+
+  if (!smsApiKey) {
+    console.log("\n=======================================================");
+    console.log(`📱 [DEV SMS SIMULATOR] To: ${normalizedPhone}`);
+    console.log(`💬 Transactional SMS: "${message}"`);
+    console.log("ℹ️  Configure SMS_API_KEY in .env.local to dispatch live SMS");
+    console.log("=======================================================\n");
+    return { success: true };
+  }
+
+  try {
+    const response = await fetch("https://sms.arkesel.com/api/v2/sms/send", {
+      method: "POST",
+      headers: {
+        "api-key": smsApiKey,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        sender: process.env.SMS_SENDER_ID || "NMarket",
+        message,
+        recipients: [normalizedPhone],
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("SMS gateway error:", errorText);
+      return { success: false, error: "Failed to dispatch SMS through gateway." };
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error("SMS delivery exception:", err);
+    return { success: false, error: (err as Error).message };
+  }
+}

@@ -3,6 +3,8 @@ import { connectToDatabase } from "@/lib/mongodb";
 import { getSessionUser } from "@/lib/jwt";
 import { Order } from "@/models/Order";
 import { Store } from "@/models/Store";
+import { User } from "@/models/User";
+import { sendRiderDispatchAlert } from "@/lib/notifications";
 
 export async function PATCH(
   req: Request,
@@ -63,6 +65,29 @@ export async function PATCH(
     }
 
     await order.save();
+
+    // If marked ready for pickup, alert online riders in Tamale
+    if (status === "READY_FOR_PICKUP") {
+      try {
+        const onlineRiders = await User.find({
+          role: "RIDER",
+          "riderProfile.isOnline": true,
+        }).lean();
+
+        for (const r of onlineRiders) {
+          if (r.phone) {
+            await sendRiderDispatchAlert({
+              riderPhone: r.phone,
+              orderNumber: order.orderNumber,
+              pickupArea: store.address?.area || "Tamale Central",
+              deliveryFee: subOrder.deliveryFee || 10,
+            });
+          }
+        }
+      } catch (riderErr) {
+        console.error("Non-blocking rider notification error:", riderErr);
+      }
+    }
 
     return NextResponse.json({
       success: true,

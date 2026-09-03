@@ -6,8 +6,10 @@ import { getSessionUser } from "@/lib/jwt";
 import { Order, ISellerOrder, IOrderItem } from "@/models/Order";
 import { Product } from "@/models/Product";
 import { Store } from "@/models/Store";
+import { User } from "@/models/User";
 import { reserveCartStock } from "@/lib/inventory-reservation";
 import { calculateTamaleDeliveryFee } from "@/lib/delivery-fee";
+import { sendCustomerOrderNotification, sendMerchantNewOrderAlert } from "@/lib/notifications";
 
 export async function POST(req: Request) {
   try {
@@ -168,6 +170,43 @@ export async function POST(req: Request) {
       totalDeliveryFee: deliveryCalc.totalDeliveryFee,
       totalAmount,
     });
+
+    // Asynchronously dispatch Customer & Merchant Notifications
+    try {
+      const customer = await User.findById(session.userId);
+      const allItems = sellerOrders.flatMap((so) => so.items);
+
+      await sendCustomerOrderNotification({
+        phone: shippingAddress.phone || customer?.phone || "",
+        email: customer?.email,
+        customerName: shippingAddress.recipient,
+        orderNumber: order.orderNumber,
+        deliveryOtp: order.deliveryOtp,
+        totalAmount: order.totalAmount,
+        area: shippingAddress.area,
+        items: allItems.map((i) => ({
+          name: i.name,
+          quantity: i.quantity,
+          totalPrice: i.totalPrice,
+        })),
+      });
+
+      // Notify each merchant store
+      for (const so of sellerOrders) {
+        const store = await Store.findById(so.storeId);
+        if (store?.phone) {
+          await sendMerchantNewOrderAlert({
+            storeName: so.storeName,
+            storePhone: store.phone,
+            orderNumber: order.orderNumber,
+            itemCount: so.items.length,
+            subtotal: so.subtotal,
+          });
+        }
+      }
+    } catch (notifErr) {
+      console.error("Non-blocking notification error:", notifErr);
+    }
 
     return NextResponse.json({
       success: true,

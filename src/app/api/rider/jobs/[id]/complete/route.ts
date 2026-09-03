@@ -5,6 +5,7 @@ import { Delivery } from "@/models/Delivery";
 import { Order } from "@/models/Order";
 import { User } from "@/models/User";
 import { commitReservedStock } from "@/lib/inventory-reservation";
+import { sendCustomerDeliveredAlert } from "@/lib/notifications";
 
 export async function POST(
   req: Request,
@@ -100,6 +101,17 @@ export async function POST(
       }
 
       await order.save();
+
+      // Notify customer of successful delivery
+      try {
+        const customer = await User.findById(order.customerId);
+        await sendCustomerDeliveredAlert({
+          phone: order.shippingAddress.phone || customer?.phone || "",
+          orderNumber: order.orderNumber,
+        });
+      } catch (custErr) {
+        console.error("Non-blocking customer delivery notification error:", custErr);
+      }
     }
 
     return NextResponse.json({
