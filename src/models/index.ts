@@ -7,3 +7,5 @@ export * from "./VerificationToken";
 export * from "./Category";
 export * from "./Delivery";
 export * from "./Payout";
+export * from "./Review";
+export * from "./Dispute";

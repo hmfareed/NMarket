@@ -103,6 +103,12 @@ export default function AdminDashboardPage() {
               MoMo Settlements
             </Link>
             <Link
+              href="/admin/disputes"
+              className="text-slate-300 hover:text-white transition font-medium"
+            >
+              Disputes
+            </Link>
+            <Link
               href="/"
               className="text-slate-400 hover:text-white transition font-medium"
             >
@@ -254,6 +260,28 @@ export default function AdminDashboardPage() {
                     className="block text-center w-full text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl transition"
                   >
                     Open Payouts Center →
+                  </Link>
+                </div>
+
+                {/* Disputes & Complaints Card */}
+                <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-3 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-slate-900 font-bold text-sm">
+                      <AlertCircle className="h-4 w-4 text-amber-600" />
+                      <span>Disputes & Protection</span>
+                    </div>
+                    <span className="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                      Adjudication
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    Investigate customer complaints, damaged item reports, and authorize refunds.
+                  </p>
+                  <Link
+                    href="/admin/disputes"
+                    className="block text-center w-full text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white py-2.5 rounded-xl transition"
+                  >
+                    Manage Disputes →
                   </Link>
                 </div>
               </div>

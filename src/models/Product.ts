@@ -40,6 +40,10 @@ export interface IProduct extends Document {
     type: "Point";
     coordinates: [number, number]; // [longitude, latitude] denormalized for proximity search
   };
+  rating?: {
+    average: number;
+    count: number;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -103,6 +107,10 @@ const ProductSchema = new Schema<IProduct>(
         type: [Number], // [longitude, latitude]
         required: true,
       },
+    },
+    rating: {
+      average: { type: Number, default: 0 },
+      count: { type: Number, default: 0 },
     },
   },
   { timestamps: true }
