@@ -24,10 +24,13 @@ export async function sendSmsOtp({
   }
 
   const smsApiKey = process.env.SMS_API_KEY;
+  const isSmsConfigured = Boolean(
+    smsApiKey && !smsApiKey.startsWith("re_") && !smsApiKey.includes("xxxx")
+  );
   const message = `Your NMarket verification code is: ${code}. Valid for 10 minutes. Do not share this code.`;
 
-  // Development Fallback: If no SMS API key is configured, log code to terminal
-  if (!smsApiKey) {
+  // Development Fallback: If no valid SMS API key is configured, log code to terminal
+  if (!isSmsConfigured) {
     console.log("\n=======================================================");
     console.log(`📱 [DEV SMS SIMULATOR] To: ${normalizedPhone}`);
     console.log(`🔐 SMS Message: "${message}"`);
@@ -79,8 +82,11 @@ export async function sendCustomSms({
 }: SendCustomSmsParams): Promise<{ success: boolean; error?: string }> {
   const normalizedPhone = normalizeGhanaPhone(phone);
   const smsApiKey = process.env.SMS_API_KEY;
+  const isSmsConfigured = Boolean(
+    smsApiKey && !smsApiKey.startsWith("re_") && !smsApiKey.includes("xxxx")
+  );
 
-  if (!smsApiKey) {
+  if (!isSmsConfigured) {
     console.log("\n=======================================================");
     console.log(`📱 [DEV SMS SIMULATOR] To: ${normalizedPhone}`);
     console.log(`💬 Transactional SMS: "${message}"`);

@@ -127,6 +127,22 @@ export default function CheckoutPage() {
         throw new Error(data.error || "Failed to place order.");
       }
 
+      // Initialize Paystack / Mobile Money Gateway Transaction
+      const payRes = await fetch("/api/payments/initialize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderId: data.orderId,
+          momoPhone: momoPhone || phone,
+          momoNetwork,
+        }),
+      });
+
+      const payData = await payRes.json();
+      if (!payRes.ok) {
+        throw new Error(payData.error || "Failed to initialize payment gateway.");
+      }
+
       if (saveThisAddress) {
         fetch("/api/customer/addresses", {
           method: "POST",
@@ -144,7 +160,16 @@ export default function CheckoutPage() {
       }
 
       clearCart();
-      router.push(`/orders/${data.orderId}`);
+
+      if (payData.isSimulated) {
+        // Auto-verify simulated pilot payment
+        await fetch(`/api/payments/verify/${payData.reference}`);
+        router.push(`/orders/${data.orderId}`);
+      } else if (payData.authorizationUrl) {
+        window.location.href = payData.authorizationUrl;
+      } else {
+        router.push(`/orders/${data.orderId}`);
+      }
     } catch (err) {
       setError((err as Error).message);
     } finally {

@@ -9,3 +9,4 @@ export * from "./Delivery";
 export * from "./Payout";
 export * from "./Review";
 export * from "./Dispute";
+export * from "./Transaction";
