@@ -20,6 +20,7 @@ import {
   Plus,
   Minus,
   Trash2,
+  Package,
 } from "lucide-react";
 import { formatGHS } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
@@ -161,6 +162,13 @@ export default function CustomerMarketplace() {
                 className="flex items-center gap-1.5 text-slate-700 hover:text-emerald-600 font-bold px-3 py-1.5 rounded-lg hover:bg-slate-100 transition"
               >
                 <span>Sign In</span>
+              </Link>
+              <Link
+                href="/orders"
+                className="flex items-center gap-1.5 text-slate-700 hover:text-emerald-600 font-bold px-3 py-1.5 rounded-lg hover:bg-slate-100 transition"
+              >
+                <Package className="h-4 w-4 text-emerald-600" />
+                <span className="hidden sm:inline">My Orders</span>
               </Link>
               <Link
                 href="/admin"

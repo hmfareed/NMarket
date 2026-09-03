@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -35,6 +35,44 @@ export default function CheckoutPage() {
   const [momoPhone, setMomoPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Saved Addresses State
+  interface SavedAddress {
+    _id: string;
+    label: string;
+    recipient: string;
+    phone: string;
+    area: string;
+    pickupAddress: string;
+    landmark?: string;
+    isDefault?: boolean;
+  }
+  const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+  const [saveThisAddress, setSaveThisAddress] = useState(false);
+
+  useEffect(() => {
+    async function loadAddresses() {
+      try {
+        const res = await fetch("/api/customer/addresses");
+        if (res.ok) {
+          const data = await res.json();
+          const list: SavedAddress[] = data.addresses || [];
+          setSavedAddresses(list);
+          const defaultAddr = list.find((a) => a.isDefault) || list[0];
+          if (defaultAddr) {
+            setSelectedAddressId(defaultAddr._id);
+            setRecipient(defaultAddr.recipient);
+            setPhone(defaultAddr.phone);
+            setArea(defaultAddr.area);
+            setPickupAddress(defaultAddr.pickupAddress);
+            if (defaultAddr.landmark) setLandmark(defaultAddr.landmark);
+          }
+        }
+      } catch {}
+    }
+    loadAddresses();
+  }, []);
 
   // Group items by seller
   const uniqueStoreCount = new Set(items.map((i) => i.storeId || "default")).size;
@@ -87,6 +125,22 @@ export default function CheckoutPage() {
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data.error || "Failed to place order.");
+      }
+
+      if (saveThisAddress) {
+        fetch("/api/customer/addresses", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            label: "Home",
+            recipient,
+            phone,
+            area,
+            pickupAddress,
+            landmark,
+            deliveryInstructions,
+          }),
+        }).catch(() => {});
       }
 
       clearCart();
@@ -160,6 +214,38 @@ export default function CheckoutPage() {
                   <MapPin className="h-4 w-4 text-emerald-600" />
                   <span>Delivery Address in Tamale</span>
                 </div>
+
+                {/* Saved Tamale Address Selector */}
+                {savedAddresses.length > 0 && (
+                  <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+                      Saved Dropoff Addresses
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {savedAddresses.map((addr) => (
+                        <button
+                          key={addr._id}
+                          type="button"
+                          onClick={() => {
+                            setSelectedAddressId(addr._id);
+                            setRecipient(addr.recipient);
+                            setPhone(addr.phone);
+                            setArea(addr.area);
+                            setPickupAddress(addr.pickupAddress);
+                            if (addr.landmark) setLandmark(addr.landmark);
+                          }}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition border text-left ${
+                            selectedAddressId === addr._id
+                              ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
+                              : "bg-white text-slate-700 border-slate-200 hover:bg-slate-100"
+                          }`}
+                        >
+                          <span className="font-extrabold">{addr.label}:</span> {addr.area} ({addr.recipient})
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
@@ -246,6 +332,18 @@ export default function CheckoutPage() {
                       className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
                     />
                   </div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-100">
+                  <label className="flex items-center gap-2 text-xs text-slate-600 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={saveThisAddress}
+                      onChange={(e) => setSaveThisAddress(e.target.checked)}
+                      className="rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4"
+                    />
+                    <span className="font-medium">Save this address to my account for future Tamale orders</span>
+                  </label>
                 </div>
               </div>
 
