@@ -5,8 +5,9 @@ import bcrypt from "bcryptjs";
 async function main() {
   await connectToDatabase();
 
-  const email = "admin@nmarket.gh";
-  const passwordHash = await bcrypt.hash("AdminPass123!", 10);
+  const email = "northmarket234@gmail.com";
+  const password = process.env.ADMIN_INITIAL_PASSWORD || "AdminPass123!";
+  const passwordHash = await bcrypt.hash(password, 10);
 
   let admin = await User.findOne({ email });
   if (!admin) {
@@ -28,9 +29,16 @@ async function main() {
     admin.role = "SUPER_ADMIN";
     admin.status = "ACTIVE";
     admin.passwordHash = passwordHash;
+    admin.isEmailVerified = true;
+    admin.isPhoneVerified = true;
     await admin.save();
     console.log("Updated Super Admin to SUPER_ADMIN role:", email);
   }
+
+  console.log("\nSuper Admin Credentials:");
+  console.log("Email:", email);
+  console.log("Password:", password);
+  console.log("Role: SUPER_ADMIN");
 
   process.exit(0);
 }

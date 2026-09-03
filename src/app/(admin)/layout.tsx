@@ -184,15 +184,16 @@ export default function AdminLayout({
             </button>
 
             {/* Admin Profile */}
-            <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
-              <div className="w-8 h-8 rounded-xl bg-dark-900 text-amber-400 flex items-center justify-center font-black text-xs">
-                A
+            <div className="flex items-center gap-2.5 pl-2 border-l border-slate-200">
+              <div className="w-8 h-8 rounded-xl bg-dark-900 text-amber-400 flex items-center justify-center font-black text-xs shadow-xs">
+                N
               </div>
               <div className="hidden sm:block text-left">
-                <p className="text-xs font-bold text-slate-900 leading-tight">Super Admin</p>
-                <p className="text-[10px] text-emerald-600 font-bold">Tamale Ops</p>
+                <p className="text-xs font-black text-slate-900 leading-tight">Super Admin</p>
+                <p className="text-[10px] text-slate-400 font-medium truncate max-w-[170px]" title="northmarket234@gmail.com">
+                  northmarket234@gmail.com
+                </p>
               </div>
-              <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
             </div>
           </div>
         </header>
