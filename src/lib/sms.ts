@@ -45,7 +45,7 @@ export async function sendSmsOtp({
     const response = await fetch("https://sms.arkesel.com/api/v2/sms/send", {
       method: "POST",
       headers: {
-        "api-key": smsApiKey,
+        "api-key": smsApiKey || "",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -99,7 +99,7 @@ export async function sendCustomSms({
     const response = await fetch("https://sms.arkesel.com/api/v2/sms/send", {
       method: "POST",
       headers: {
-        "api-key": smsApiKey,
+        "api-key": smsApiKey || "",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
