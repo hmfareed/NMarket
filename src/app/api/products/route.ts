@@ -23,7 +23,14 @@ export async function GET(req: Request) {
     };
 
     if (category && category !== "all") {
-      query.category = category;
+      const cleanCat = category.trim();
+      // Handle slug or compound names like phones-tablets or Health & Beauty
+      const tokens = cleanCat.split(/[\s&-]+/).filter((t) => t.length > 2);
+      if (tokens.length > 0) {
+        query.category = { $regex: tokens.join("|"), $options: "i" };
+      } else {
+        query.category = { $regex: cleanCat, $options: "i" };
+      }
     }
 
     if (q && q.trim()) {
@@ -31,6 +38,7 @@ export async function GET(req: Request) {
         { name: { $regex: q.trim(), $options: "i" } },
         { description: { $regex: q.trim(), $options: "i" } },
         { brand: { $regex: q.trim(), $options: "i" } },
+        { category: { $regex: q.trim(), $options: "i" } },
       ];
     }
 

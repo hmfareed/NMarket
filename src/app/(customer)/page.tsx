@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
   MapPin,
@@ -19,11 +19,16 @@ import {
   ArrowRight,
   ChevronRight,
   CheckCircle2,
+  Clock,
+  Flame,
+  Tag,
+  Store as StoreIcon,
+  SlidersHorizontal,
 } from "lucide-react";
 import { formatGHS } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 import CustomerHeader from "@/components/customer/CustomerHeader";
-import MegaCategoryNav from "@/components/customer/MegaCategoryNav";
+import MegaCategoryNav, { MEGA_CATEGORIES } from "@/components/customer/MegaCategoryNav";
 
 interface CategoryData {
   _id: string;
@@ -62,7 +67,7 @@ interface ProductData {
   };
 }
 
-// Compact Stores list for quick horizontal swipe
+// Stores Near You curated list for Tamale
 const STORES_NEAR_YOU = [
   {
     id: "alhaji-electronics",
@@ -93,13 +98,33 @@ const STORES_NEAR_YOU = [
   },
 ];
 
+type BoardViewMode = "ALL" | "FLASH_DEALS" | "UNDER_100" | "TOP_RATED" | "FAST_DISPATCH";
+
 export default function CustomerMarketplace() {
   const [categories, setCategories] = useState<CategoryData[]>([]);
   const [products, setProducts] = useState<ProductData[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
+  const [selectedStore, setSelectedStore] = useState<string>("");
+  const [boardViewMode, setBoardViewMode] = useState<BoardViewMode>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedArea, setSelectedArea] = useState("Tamale Central");
   const [loading, setLoading] = useState(true);
+
+  // Flash deals countdown state
+  const [timeLeft, setTimeLeft] = useState({ hours: 4, minutes: 28, seconds: 15 });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
+        if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
+        if (prev.hours > 0) return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
+        return { hours: 5, minutes: 59, seconds: 59 };
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const {
     items: cartItems,
@@ -112,6 +137,7 @@ export default function CustomerMarketplace() {
     setIsCartOpen,
   } = useCart();
 
+  // Load products & categories from API
   useEffect(() => {
     async function loadData() {
       setLoading(true);
@@ -127,7 +153,9 @@ export default function CustomerMarketplace() {
         if (selectedCategory && selectedCategory !== "all") {
           params.set("category", selectedCategory);
         }
-        if (searchQuery.trim()) {
+        if (selectedSubcategory.trim()) {
+          params.set("q", selectedSubcategory.trim());
+        } else if (searchQuery.trim()) {
           params.set("q", searchQuery.trim());
         }
         if (params.toString()) {
@@ -147,7 +175,60 @@ export default function CustomerMarketplace() {
     }
 
     loadData();
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, selectedSubcategory, searchQuery]);
+
+  // Subcategories for the currently selected category from MEGA_CATEGORIES definition
+  const currentCategoryGroups = useMemo(() => {
+    if (!selectedCategory || selectedCategory === "all") return null;
+    const found = MEGA_CATEGORIES.find(
+      (c) =>
+        c.name.toLowerCase() === selectedCategory.toLowerCase() ||
+        selectedCategory.toLowerCase().includes(c.name.toLowerCase().split(" ")[0])
+    );
+    return found?.groups || null;
+  }, [selectedCategory]);
+
+  // Dynamically transformed product board based on active View Mode & Store Filter
+  const displayedProducts = useMemo(() => {
+    return products.filter((p) => {
+      // Store filter
+      if (selectedStore) {
+        const storeMatches =
+          p.storeId?.name.toLowerCase().includes(selectedStore.toLowerCase()) ||
+          selectedStore.toLowerCase().includes(p.storeId?.name.toLowerCase() || "");
+        if (!storeMatches) return false;
+      }
+
+      // Board view mode filters
+      switch (boardViewMode) {
+        case "FLASH_DEALS":
+          return (p.compareAtPrice && p.compareAtPrice > p.price) || p.price > 100;
+        case "UNDER_100":
+          return p.price <= 100;
+        case "TOP_RATED":
+          return (p.rating?.average || 4.8) >= 4.7;
+        case "FAST_DISPATCH":
+          return p.inventory.available >= 5;
+        default:
+          return true;
+      }
+    });
+  }, [products, boardViewMode, selectedStore]);
+
+  // Flash deals sub-shelf (items with compareAtPrice or top discounts)
+  const flashDeals = useMemo(() => {
+    return products
+      .filter((p) => (p.compareAtPrice && p.compareAtPrice > p.price) || p.price > 150)
+      .slice(0, 6);
+  }, [products]);
+
+  const handleResetFilters = () => {
+    setSelectedCategory("all");
+    setSelectedSubcategory("");
+    setSelectedStore("");
+    setBoardViewMode("ALL");
+    setSearchQuery("");
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
@@ -160,26 +241,29 @@ export default function CustomerMarketplace() {
         onAreaChange={setSelectedArea}
       />
 
-      {/* Desktop Big-Screen Mega Category Lineup with Multi-Column Hover Dropdowns */}
+      {/* Desktop Big-Screen Mega Category Lineup with Monochrome Icons & Hover Dropdowns */}
       <MegaCategoryNav
         activeCategory={selectedCategory}
         onSelectCategory={(catName) => {
           setSelectedCategory(catName);
+          setSelectedSubcategory("");
+          setSelectedStore("");
           setSearchQuery("");
         }}
         onSelectSubcategory={(subName, catName) => {
           setSelectedCategory(catName);
-          setSearchQuery(subName);
+          setSelectedSubcategory(subName);
+          setSelectedStore("");
         }}
       />
 
-      {/* Main Container - Fills Left and Right Side with edge-to-edge feel */}
+      {/* Main Container - Fills Left and Right Side with Edge-to-Edge Feel */}
       <main className="w-full max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 py-3 space-y-4 flex-1">
-        {/* COMPACT HERO PROMO CARD (Matches UI Reference: Sleek, ~110px-130px height, not stretching the mobile screen) */}
-        <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-gradient-to-r from-dark-950 via-dark-900 to-amber-950 text-white shadow-card p-4 sm:p-6 flex items-center justify-between border border-amber-500/30">
-          <div className="space-y-1.5 z-10 max-w-[220px] sm:max-w-md">
+        {/* COMPACT HERO PROMO CARD (Sleek ~110px-130px height) */}
+        <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-gradient-to-r from-dark-950 via-dark-900 to-amber-950 text-white shadow-card p-4 sm:p-5 flex items-center justify-between border border-amber-500/30">
+          <div className="space-y-1 z-10 max-w-[240px] sm:max-w-md">
             <span className="inline-block text-[9px] font-black uppercase tracking-wider text-amber-400 bg-amber-500/20 px-2 py-0.5 rounded-md border border-amber-500/30">
-              ⚡ Tamale Metro Same-Day
+              ⚡ Tamale Metro Same-Day Delivery
             </span>
             <h1 className="text-base sm:text-2xl font-black tracking-tight leading-tight">
               SHOP LOCAL.<br />
@@ -195,57 +279,62 @@ export default function CustomerMarketplace() {
                 href="#product-board"
                 className="inline-flex items-center gap-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-[10px] sm:text-xs px-3 py-1.5 rounded-xl shadow-xs transition active:scale-95"
               >
-                <span>Shop Now</span>
+                <span>Explore Board</span>
                 <ArrowRight className="h-3 w-3" />
               </a>
             </div>
           </div>
 
-          {/* Compact visual badge on right */}
           <div className="relative shrink-0 flex items-center justify-center pr-1 sm:pr-4">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-400 shadow-glow backdrop-blur-xs">
-              <Truck className="h-8 w-8 sm:h-10 sm:w-10 text-amber-400" />
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-400 shadow-glow backdrop-blur-xs">
+              <Truck className="h-7 w-7 sm:h-8 sm:w-8 text-amber-400" />
             </div>
           </div>
         </div>
 
-        {/* COMPACT CATEGORIES HORIZONTAL PILLS (Quick 1-tap switching for product board) */}
+        {/* COMPACT CATEGORIES HORIZONTAL PILLS (Clean Monochrome Styling) */}
         <section className="space-y-2">
           <div className="flex items-center justify-between px-0.5">
             <h2 className="text-xs sm:text-sm font-black text-slate-900 tracking-tight">
-              Categories
+              Browse Departments
             </h2>
             <Link
               href="/categories"
-              className="text-[11px] font-bold text-amber-600 hover:text-amber-700 flex items-center gap-0.5"
+              className="text-[11px] font-bold text-slate-500 hover:text-amber-600 flex items-center gap-0.5 transition"
             >
               <span>See all</span>
               <ChevronRight className="h-3 w-3" />
             </Link>
           </div>
 
-          {/* Scrollable category pills filling screen width */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none -mx-2.5 px-2.5 sm:mx-0 sm:px-0">
+          {/* Scrollable category pills with clean monochrome styling */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none -mx-2.5 px-2.5 sm:mx-0 sm:px-0">
             <button
               type="button"
-              onClick={() => setSelectedCategory("all")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-all ${
+              onClick={() => {
+                setSelectedCategory("all");
+                setSelectedSubcategory("");
+              }}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer ${
                 selectedCategory === "all"
                   ? "bg-dark-900 text-amber-400 shadow-xs"
-                  : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/90"
+                  : "bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200"
               }`}
             >
-              🔥 All Deals
+              All Categories
             </button>
             {categories.map((cat) => (
               <button
                 key={cat._id}
                 type="button"
-                onClick={() => setSelectedCategory(cat.name)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-all ${
+                onClick={() => {
+                  setSelectedCategory(cat.name);
+                  setSelectedSubcategory("");
+                }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer ${
                   selectedCategory === cat.name
                     ? "bg-amber-500 text-slate-950 font-black shadow-xs"
-                    : "bg-white text-slate-700 hover:bg-amber-50 border border-slate-200/90"
+                    : "bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200"
                 }`}
               >
                 {cat.name}
@@ -254,75 +343,263 @@ export default function CustomerMarketplace() {
           </div>
         </section>
 
-        {/* STORES NEAR YOU (Compact Horizontal Strip matching UI reference) */}
+        {/* STORES NEAR YOU (Interactive: Clicking a store changes the board to that store's stock) */}
         <section className="space-y-2">
           <div className="flex items-center justify-between px-0.5">
-            <h2 className="text-xs sm:text-sm font-black text-slate-900 tracking-tight">
-              Stores Near You
-            </h2>
-            <Link
-              href="/seller"
-              className="text-[11px] font-bold text-amber-600 hover:text-amber-700 flex items-center gap-0.5"
-            >
-              <span>See all</span>
-              <ChevronRight className="h-3 w-3" />
-            </Link>
-          </div>
-
-          <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none -mx-2.5 px-2.5 sm:mx-0 sm:px-0">
-            {STORES_NEAR_YOU.map((store) => (
-              <div
-                key={store.id}
-                className="w-56 sm:w-64 bg-white rounded-2xl p-2.5 border border-slate-200/80 shadow-xs flex items-center gap-2.5 shrink-0"
-              >
-                <img
-                  src={store.image}
-                  alt={store.name}
-                  className="w-12 h-12 rounded-xl object-cover shrink-0 border border-slate-100"
-                />
-                <div className="flex-1 min-w-0 space-y-0.5">
-                  <h3 className="text-xs font-black text-slate-900 truncate">
-                    {store.name}
-                  </h3>
-                  <p className="text-[10px] text-slate-500 truncate">
-                    {store.area} • {store.distance}
-                  </p>
-                  <div className="flex items-center gap-1 pt-0.5">
-                    <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.2 rounded-md">
-                      {store.badge}
-                    </span>
-                    <span className="text-[9px] font-bold text-amber-700">
-                      ★ {store.rating}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* DYNAMIC PRODUCT BOARD (Displays products one after the other in continuous discovery grid) */}
-        <section id="product-board" className="space-y-3 pt-1">
-          <div className="flex items-center justify-between px-0.5">
-            <div>
-              <h2 className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-                {selectedCategory === "all" ? "Popular Products in Tamale" : selectedCategory}
+            <div className="flex items-center gap-1.5">
+              <h2 className="text-xs sm:text-sm font-black text-slate-900 tracking-tight">
+                Stores Near You
               </h2>
-              <p className="text-[11px] text-slate-500">
-                {products.length} {products.length === 1 ? "item" : "items"} available for immediate delivery
-              </p>
+              <span className="text-[10px] text-slate-400 font-medium">
+                (Click store to view inventory)
+              </span>
             </div>
-            {selectedCategory !== "all" && (
+            {selectedStore && (
               <button
                 type="button"
-                onClick={() => setSelectedCategory("all")}
+                onClick={() => setSelectedStore("")}
                 className="text-[11px] font-bold text-amber-600 hover:underline"
               >
-                Clear filter
+                Clear Store Filter
               </button>
             )}
           </div>
 
+          <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none -mx-2.5 px-2.5 sm:mx-0 sm:px-0">
+            {STORES_NEAR_YOU.map((store) => {
+              const isStoreActive = selectedStore.toLowerCase() === store.name.toLowerCase();
+              return (
+                <button
+                  key={store.id}
+                  type="button"
+                  onClick={() =>
+                    setSelectedStore(isStoreActive ? "" : store.name)
+                  }
+                  className={`w-56 sm:w-64 rounded-2xl p-2.5 border transition-all flex items-center gap-2.5 shrink-0 text-left cursor-pointer ${
+                    isStoreActive
+                      ? "bg-amber-50/80 border-amber-400 ring-2 ring-amber-400/20 shadow-xs"
+                      : "bg-white border-slate-200/80 hover:border-slate-300 shadow-xs"
+                  }`}
+                >
+                  <img
+                    src={store.image}
+                    alt={store.name}
+                    className="w-12 h-12 rounded-xl object-cover shrink-0 border border-slate-100"
+                  />
+                  <div className="flex-1 min-w-0 space-y-0.5">
+                    <h3 className="text-xs font-black text-slate-900 truncate">
+                      {store.name}
+                    </h3>
+                    <p className="text-[10px] text-slate-500 truncate">
+                      {store.area} • {store.distance}
+                    </p>
+                    <div className="flex items-center gap-1 pt-0.5">
+                      <span className="text-[9px] font-bold text-slate-600 bg-slate-100 px-1.5 py-0.2 rounded-md">
+                        {store.badge}
+                      </span>
+                      <span className="text-[9px] font-bold text-amber-700">
+                        ★ {store.rating}
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* DYNAMIC FLASH DEALS SHELF (Changes the board with a live countdown and limited-stock deals) */}
+        {flashDeals.length > 0 && !selectedSubcategory && (
+          <section className="bg-gradient-to-r from-amber-500/10 via-amber-400/5 to-transparent rounded-2xl sm:rounded-3xl p-3 sm:p-4 border border-amber-300/40 space-y-2.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 rounded-lg bg-amber-500 text-slate-950 font-black">
+                  <Zap className="h-4 w-4 fill-slate-950" />
+                </div>
+                <div>
+                  <h3 className="text-xs sm:text-sm font-black text-slate-900 tracking-tight flex items-center gap-1">
+                    <span>Tamale Flash Deals</span>
+                    <span className="text-[10px] text-amber-700 bg-amber-100 px-1.5 py-0.2 rounded-full font-bold">
+                      Limited Time
+                    </span>
+                  </h3>
+                </div>
+              </div>
+
+              {/* Countdown clock */}
+              <div className="flex items-center gap-1 text-[11px] font-mono font-black text-slate-800 bg-white px-2 py-1 rounded-xl border border-amber-200 shadow-xs">
+                <Clock className="h-3 w-3 text-amber-600" />
+                <span>
+                  {String(timeLeft.hours).padStart(2, "0")}:{String(timeLeft.minutes).padStart(2, "0")}:{String(timeLeft.seconds).padStart(2, "0")}
+                </span>
+              </div>
+            </div>
+
+            {/* Horizontal Flash Deals Scroll */}
+            <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none -mx-1 px-1">
+              {flashDeals.map((item) => (
+                <Link
+                  key={item._id}
+                  href={`/products/${item._id}`}
+                  className="w-36 sm:w-44 bg-white rounded-xl p-2 border border-slate-200 shadow-xs shrink-0 flex flex-col justify-between group hover:border-amber-400 transition"
+                >
+                  <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-slate-100 mb-1.5">
+                    <img
+                      src={item.images?.[0]?.url || "https://images.unsplash.com/photo-1544441893-675973e31985?w=200&auto=format&fit=crop&q=60"}
+                      alt=""
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-200"
+                    />
+                    <span className="absolute top-1 left-1 bg-amber-500 text-slate-950 font-black text-[8px] px-1 py-0.2 rounded-md">
+                      DEAL
+                    </span>
+                  </div>
+
+                  <p className="text-[11px] font-bold text-slate-900 line-clamp-1 group-hover:text-amber-600 transition">
+                    {item.name}
+                  </p>
+                  <div className="flex items-baseline gap-1 mt-0.5">
+                    <span className="text-xs font-black text-slate-900 font-mono">
+                      {formatGHS(item.price)}
+                    </span>
+                    {item.compareAtPrice && (
+                      <span className="text-[9px] text-slate-400 line-through">
+                        {formatGHS(item.compareAtPrice)}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* DYNAMIC PRODUCT BOARD (Changes on the fly with Channels, Subcategories & Filters) */}
+        <section id="product-board" className="space-y-3 pt-1">
+          {/* Active Filter Banner if Category or Subcategory or Store is Active */}
+          {(selectedCategory !== "all" || selectedSubcategory || selectedStore) && (
+            <div className="p-3 bg-white rounded-2xl border border-amber-200/80 shadow-xs flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-black text-slate-900">Active Board:</span>
+                {selectedCategory !== "all" && (
+                  <span className="text-[11px] font-bold bg-amber-50 text-amber-800 px-2 py-0.5 rounded-lg border border-amber-200 flex items-center gap-1">
+                    <span>{selectedCategory}</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedCategory("all");
+                        setSelectedSubcategory("");
+                      }}
+                      className="hover:text-rose-600"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                )}
+                {selectedSubcategory && (
+                  <span className="text-[11px] font-bold bg-slate-100 text-slate-800 px-2 py-0.5 rounded-lg border border-slate-200 flex items-center gap-1">
+                    <span>{selectedSubcategory}</span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedSubcategory("")}
+                      className="hover:text-rose-600"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                )}
+                {selectedStore && (
+                  <span className="text-[11px] font-bold bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-lg border border-emerald-200 flex items-center gap-1">
+                    <StoreIcon className="h-3 w-3" />
+                    <span>Store: {selectedStore}</span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedStore("")}
+                      className="hover:text-rose-600"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={handleResetFilters}
+                className="text-xs font-bold text-amber-600 hover:text-amber-700 hover:underline cursor-pointer"
+              >
+                Reset All Filters
+              </button>
+            </div>
+          )}
+
+          {/* Subcategory Filter Pills (Appears when a category is active to change the board view) */}
+          {currentCategoryGroups && (
+            <div className="space-y-1.5">
+              <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                Explore in {selectedCategory}:
+              </span>
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none -mx-2.5 px-2.5 sm:mx-0 sm:px-0">
+                <button
+                  type="button"
+                  onClick={() => setSelectedSubcategory("")}
+                  className={`px-2.5 py-1 rounded-xl text-[11px] font-bold shrink-0 transition cursor-pointer ${
+                    !selectedSubcategory
+                      ? "bg-dark-900 text-amber-400 font-black"
+                      : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
+                  }`}
+                >
+                  All {selectedCategory}
+                </button>
+                {currentCategoryGroups.flatMap((g) => g.items).slice(0, 12).map((item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => setSelectedSubcategory(item === selectedSubcategory ? "" : item)}
+                    className={`px-2.5 py-1 rounded-xl text-[11px] font-bold shrink-0 transition cursor-pointer ${
+                      selectedSubcategory === item
+                        ? "bg-amber-500 text-slate-950 font-black"
+                        : "bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200"
+                    }`}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* DYNAMIC BOARD VIEW CHANNELS (Transforms the board between Flash Deals, Budget, Top Rated, and All) */}
+          <div className="flex items-center justify-between gap-2 border-b border-slate-200/80 pb-2">
+            {/* View Mode Tabs */}
+            <div className="flex items-center gap-1 overflow-x-auto scrollbar-none -mx-2.5 px-2.5 sm:mx-0 sm:px-0">
+              {[
+                { id: "ALL", label: "All Items" },
+                { id: "FLASH_DEALS", label: "🔥 Deals & Discounts" },
+                { id: "UNDER_100", label: "⚡ Under GH₵ 100" },
+                { id: "TOP_RATED", label: "⭐ Top Rated (4.8+)" },
+                { id: "FAST_DISPATCH", label: "📦 In-Stock" },
+              ].map((mode) => (
+                <button
+                  key={mode.id}
+                  type="button"
+                  onClick={() => setBoardViewMode(mode.id as BoardViewMode)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer ${
+                    boardViewMode === mode.id
+                      ? "bg-dark-900 text-amber-400 font-black shadow-xs"
+                      : "bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200"
+                  }`}
+                >
+                  {mode.label}
+                </button>
+              ))}
+            </div>
+
+            <span className="text-[11px] text-slate-400 font-medium shrink-0 hidden sm:inline">
+              {displayedProducts.length} items
+            </span>
+          </div>
+
+          {/* Products Grid */}
           {loading ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-4 py-4">
               {[1, 2, 3, 4, 5, 6].map((n) => (
@@ -333,25 +610,22 @@ export default function CustomerMarketplace() {
                 </div>
               ))}
             </div>
-          ) : products.length === 0 ? (
+          ) : displayedProducts.length === 0 ? (
             <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center space-y-2">
               <ShoppingBag className="h-8 w-8 text-slate-300 mx-auto" />
-              <p className="text-xs font-bold text-slate-800">No products found</p>
+              <p className="text-xs font-bold text-slate-800">No products found for this board view</p>
               <button
                 type="button"
-                onClick={() => {
-                  setSelectedCategory("all");
-                  setSearchQuery("");
-                }}
+                onClick={handleResetFilters}
                 className="text-xs font-bold text-amber-600 hover:underline"
               >
-                Reset filters
+                Reset all filters & return to main board
               </button>
             </div>
           ) : (
             /* 2-Column Responsive Product Discovery Board filling width */
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
-              {products.map((product) => {
+              {displayedProducts.map((product) => {
                 const imgUrl =
                   product.images?.[0]?.url ||
                   "https://images.unsplash.com/photo-1544441893-675973e31985?w=500&auto=format&fit=crop&q=60";
@@ -376,7 +650,7 @@ export default function CustomerMarketplace() {
                       />
                       {/* Discount Tag */}
                       {discount > 0 && (
-                        <span className="absolute top-1.5 left-1.5 bg-amber-500 text-white font-black text-[9px] px-1.5 py-0.2 rounded-md shadow-xs">
+                        <span className="absolute top-1.5 left-1.5 bg-amber-500 text-slate-950 font-black text-[9px] px-1.5 py-0.2 rounded-md shadow-xs">
                           -{discount}%
                         </span>
                       )}

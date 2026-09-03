@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   ShieldCheck,
   Smartphone,
-  Sparkles,
   Home,
   Tv,
   Radio,
@@ -18,8 +17,33 @@ import {
   Gamepad2,
   ChevronRight,
   ArrowRight,
-  Flame,
 } from "lucide-react";
+
+// Realistic Health & Beauty icon matching Jumia's lotion bottle and lipstick design
+export function HealthBeautyIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      {/* Sleek cosmetic lotion / serum bottle */}
+      <rect x="3" y="8" width="9" height="13" rx="2" />
+      <path d="M5.5 8V4.5A1.5 1.5 0 0 1 7 3h1a1.5 1.5 0 0 1 1.5 1.5V8" />
+      <line x1="7.5" y1="3" x2="7.5" y2="1.5" />
+      <line x1="5" y1="12" x2="10" y2="12" />
+
+      {/* Modern angled lipstick */}
+      <rect x="15" y="11" width="6" height="10" rx="1" />
+      <path d="M16 11V6.5l4-2.5v7" />
+      <line x1="15" y1="15" x2="21" y2="15" />
+    </svg>
+  );
+}
 
 export interface SubCategoryGroup {
   title: string;
@@ -40,7 +64,7 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
     id: "official-stores",
     name: "Official Stores",
     icon: ShieldCheck,
-    color: "text-emerald-600 group-hover:text-emerald-700",
+    color: "text-slate-600 group-hover:text-amber-600",
     badge: "Verified",
     groups: [
       {
@@ -69,7 +93,7 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
     id: "phones-tablets",
     name: "Phones & Tablets",
     icon: Smartphone,
-    color: "text-blue-600 group-hover:text-blue-700",
+    color: "text-slate-600 group-hover:text-amber-600",
     groups: [
       {
         title: "MOBILE PHONES",
@@ -106,8 +130,8 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
   {
     id: "health-beauty",
     name: "Health & Beauty",
-    icon: Sparkles,
-    color: "text-pink-600 group-hover:text-pink-700",
+    icon: HealthBeautyIcon,
+    color: "text-slate-600 group-hover:text-amber-600",
     groups: [
       {
         title: "ORGANIC SHEA & SKINCARE",
@@ -143,7 +167,7 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
     id: "home-office",
     name: "Home & Office",
     icon: Home,
-    color: "text-amber-700 group-hover:text-amber-800",
+    color: "text-slate-600 group-hover:text-amber-600",
     groups: [
       {
         title: "LIVING ROOM & BEDDING",
@@ -178,7 +202,7 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
     id: "appliances",
     name: "Appliances",
     icon: Tv,
-    color: "text-indigo-600 group-hover:text-indigo-700",
+    color: "text-slate-600 group-hover:text-amber-600",
     groups: [
       {
         title: "LARGE APPLIANCES",
@@ -216,7 +240,7 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
     id: "electronics",
     name: "Electronics",
     icon: Radio,
-    color: "text-cyan-600 group-hover:text-cyan-700",
+    color: "text-slate-600 group-hover:text-amber-600",
     groups: [
       {
         title: "TELEVISION & VIDEO",
@@ -252,7 +276,7 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
     id: "computing",
     name: "Computing",
     icon: Laptop,
-    color: "text-violet-600 group-hover:text-violet-700",
+    color: "text-slate-600 group-hover:text-amber-600",
     groups: [
       {
         title: "COMPUTER ACCESSORIES",
@@ -291,7 +315,7 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
     id: "fashion",
     name: "Fashion",
     icon: Shirt,
-    color: "text-rose-600 group-hover:text-rose-700",
+    color: "text-slate-600 group-hover:text-amber-600",
     groups: [
       {
         title: "TRADITIONAL NORTHERN WEAR",
@@ -327,7 +351,7 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
     id: "local-crafts",
     name: "Crafts & Shea",
     icon: Package,
-    color: "text-amber-600 group-hover:text-amber-700",
+    color: "text-slate-600 group-hover:text-amber-600",
     badge: "Northern",
     groups: [
       {
@@ -354,7 +378,7 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
     id: "groceries",
     name: "Groceries",
     icon: ShoppingBasket,
-    color: "text-emerald-700 group-hover:text-emerald-800",
+    color: "text-slate-600 group-hover:text-amber-600",
     groups: [
       {
         title: "GRAINS & TUBERS",
@@ -381,7 +405,7 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
     id: "sports",
     name: "Sporting Goods",
     icon: Trophy,
-    color: "text-red-600 group-hover:text-red-700",
+    color: "text-slate-600 group-hover:text-amber-600",
     groups: [
       {
         title: "FOOTBALL & KITS",
@@ -407,7 +431,7 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
     id: "baby-products",
     name: "Baby Products",
     icon: Baby,
-    color: "text-teal-600 group-hover:text-teal-700",
+    color: "text-slate-600 group-hover:text-amber-600",
     groups: [
       {
         title: "DIAPERING & NURSING",
@@ -433,7 +457,7 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
     id: "gaming",
     name: "Gaming",
     icon: Gamepad2,
-    color: "text-purple-600 group-hover:text-purple-700",
+    color: "text-slate-600 group-hover:text-amber-600",
     groups: [
       {
         title: "CONSOLES & GEAR",
@@ -487,7 +511,7 @@ export default function MegaCategoryNav({
       onMouseLeave={handleMouseLeave}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Horizontal Category Lineup matching User Reference */}
+        {/* Horizontal Category Lineup with clean monochrome icons matching Jumia reference */}
         <div className="flex items-center justify-between gap-1 overflow-x-auto scrollbar-none py-1.5 text-xs font-semibold text-slate-700">
           {MEGA_CATEGORIES.map((cat) => {
             const Icon = cat.icon;
@@ -506,15 +530,17 @@ export default function MegaCategoryNav({
                   className={`group flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl transition-all duration-150 cursor-pointer ${
                     isHovered || isSelected
                       ? "text-amber-600 bg-amber-50/80 font-bold"
-                      : "text-slate-700 hover:text-amber-600 hover:bg-slate-50"
+                      : "text-slate-600 hover:text-amber-600 hover:bg-slate-50"
                   }`}
                 >
                   <Icon
-                    className={`h-4 w-4 transition-transform duration-150 group-hover:scale-110 ${cat.color}`}
+                    className={`h-4 w-4 transition-transform duration-150 group-hover:scale-110 ${
+                      isHovered || isSelected ? "text-amber-600 stroke-[2.2]" : "text-slate-500 group-hover:text-amber-600"
+                    }`}
                   />
                   <span className="whitespace-nowrap tracking-tight">{cat.name}</span>
                   {cat.badge && (
-                    <span className="text-[9px] font-black uppercase bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded-md">
+                    <span className="text-[9px] font-black uppercase bg-slate-100 text-slate-700 px-1.5 py-0.2 rounded-md">
                       {cat.badge}
                     </span>
                   )}
@@ -533,7 +559,7 @@ export default function MegaCategoryNav({
         </div>
       </div>
 
-      {/* MEGA-MENU DROPDOWN PANEL matching User's uploaded screenshot */}
+      {/* MEGA-MENU DROPDOWN PANEL */}
       {hoveredCategory && (
         <div
           onMouseEnter={() => {
@@ -542,11 +568,11 @@ export default function MegaCategoryNav({
           onMouseLeave={handleMouseLeave}
           className="absolute top-full inset-x-0 bg-white border-b border-slate-200/90 shadow-elevated z-50 animate-in fade-in slide-in-from-top-1 duration-150"
         >
-          <div className="max-w-7xl mx-auto px-6 lg:px-8 py-7">
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
             {/* Mega Menu Top Category Banner */}
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-5">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
+                <div className="p-2 rounded-xl bg-slate-100 text-slate-800">
                   <hoveredCategory.icon className="h-5 w-5" />
                 </div>
                 <div>
@@ -573,15 +599,13 @@ export default function MegaCategoryNav({
             </div>
 
             {/* Subcategories Multi-Column Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {hoveredCategory.groups.map((group, gIdx) => (
-                <div key={gIdx} className="space-y-3">
-                  {/* Column Header matching User Screenshot (e.g. "LARGE APPLIANCES") */}
+                <div key={gIdx} className="space-y-2.5">
                   <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider pb-1 border-b border-slate-100">
                     {group.title}
                   </h4>
 
-                  {/* List of Product Items */}
                   <ul className="space-y-1.5">
                     {group.items.map((item, iIdx) => (
                       <li key={iIdx}>
