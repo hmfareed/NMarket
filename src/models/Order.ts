@@ -74,6 +74,9 @@ export interface IOrder extends Document {
   totalProductAmount: number;
   totalDeliveryFee: number;
   totalAmount: number;
+  deliveredAt?: Date;
+  assignedRiderId?: mongoose.Types.ObjectId;
+  cancelReason?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -177,6 +180,9 @@ const OrderSchema = new Schema<IOrder>(
     totalProductAmount: { type: Number, required: true },
     totalDeliveryFee: { type: Number, required: true, default: 0 },
     totalAmount: { type: Number, required: true },
+    deliveredAt: { type: Date },
+    assignedRiderId: { type: Schema.Types.ObjectId, ref: "User" },
+    cancelReason: { type: String },
   },
   { timestamps: true }
 );

@@ -37,6 +37,7 @@ export interface IStore extends Document {
   adminNotes?: string;
   verifiedAt?: Date;
   rejectedReason?: string;
+  commissionRate?: number; // Custom commission override % (e.g. 10)
   deliverySettings: {
     supportsLocalDelivery: boolean;
     prepTimeMinutes: number;
@@ -107,6 +108,7 @@ const StoreSchema = new Schema<IStore>(
     adminNotes: { type: String },
     verifiedAt: { type: Date },
     rejectedReason: { type: String },
+    commissionRate: { type: Number, default: 10, min: 0, max: 50 },
     deliverySettings: {
       supportsLocalDelivery: { type: Boolean, default: true },
       prepTimeMinutes: { type: Number, default: 30 },
