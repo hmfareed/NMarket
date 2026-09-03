@@ -68,22 +68,31 @@ export async function PATCH(
 
     await order.save();
 
-    // If marked ready for pickup, alert online riders in Tamale
+    // If marked ready for pickup, trigger intelligent proximity dispatch
     if (status === "READY_FOR_PICKUP") {
       try {
-        const onlineRiders = await User.find({
-          role: "RIDER",
-          "riderProfile.isOnline": true,
-        }).lean();
+        const delivery = await Delivery.findOne({
+          orderId: order._id,
+          sellerOrderId: subOrder.sellerOrderId,
+        });
 
-        for (const r of onlineRiders) {
-          if (r.phone) {
-            await sendRiderDispatchAlert({
-              riderPhone: r.phone,
-              orderNumber: order.orderNumber,
-              pickupArea: store.address?.area || "Tamale Central",
-              deliveryFee: subOrder.deliveryFee || 10,
-            });
+        if (delivery) {
+          await autoDispatchDelivery(delivery._id.toString());
+        } else {
+          const onlineRiders = await User.find({
+            role: "RIDER",
+            "riderProfile.isOnline": true,
+          }).lean();
+
+          for (const r of onlineRiders) {
+            if (r.phone) {
+              await sendRiderDispatchAlert({
+                riderPhone: r.phone,
+                orderNumber: order.orderNumber,
+                pickupArea: store.address?.area || "Tamale Central",
+                deliveryFee: subOrder.deliveryFee || 10,
+              });
+            }
           }
         }
       } catch (riderErr) {
