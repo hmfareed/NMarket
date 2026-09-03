@@ -73,6 +73,44 @@ export default function RiderPortalPage() {
   const [setupPlate, setSetupPlate] = useState("");
   const [setupZone, setSetupZone] = useState("Tamale Central (Zone 1)");
 
+  // GPS Proximity State
+  const [gpsStatus, setGpsStatus] = useState<string | null>(null);
+
+  const broadcastGpsLocation = () => {
+    if (typeof window === "undefined" || !navigator.geolocation) {
+      setGpsStatus("Geolocation not supported.");
+      return;
+    }
+
+    setGpsStatus("Pinging GPS...");
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const res = await fetch("/api/rider/location", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              coordinates: [pos.coords.longitude, pos.coords.latitude],
+            }),
+          });
+          if (res.ok) {
+            setGpsStatus(`GPS Active (${pos.coords.latitude.toFixed(3)}, ${pos.coords.longitude.toFixed(3)})`);
+            setTimeout(() => setGpsStatus(null), 4000);
+          } else {
+            setGpsStatus("GPS sync failed.");
+          }
+        } catch {
+          setGpsStatus("GPS network error.");
+        }
+      },
+      () => {
+        setGpsStatus("GPS denied/unavailable.");
+        setTimeout(() => setGpsStatus(null), 4000);
+      },
+      { enableHighAccuracy: true }
+    );
+  };
+
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -251,6 +289,17 @@ export default function RiderPortalPage() {
           </div>
 
           <div className="flex items-center gap-3">
+            {profile && profile.isOnline && (
+              <button
+                onClick={broadcastGpsLocation}
+                title="Broadcast GPS coordinates for closer dispatch ranking"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition"
+              >
+                <Navigation className="h-3.5 w-3.5" />
+                <span>{gpsStatus || "Share GPS"}</span>
+              </button>
+            )}
+
             {profile && (
               <button
                 onClick={toggleOnlineStatus}
@@ -422,13 +471,27 @@ export default function RiderPortalPage() {
               <p className="text-slate-600">
                 {activeJob.pickupLocation.address}, {activeJob.pickupLocation.area}
               </p>
-              <a
-                href={`tel:${activeJob.pickupLocation.phone}`}
-                className="inline-flex items-center gap-1 text-emerald-700 font-bold hover:underline mt-1"
-              >
-                <Phone className="h-3 w-3" />
-                <span>Call Merchant ({activeJob.pickupLocation.phone})</span>
-              </a>
+              <div className="flex flex-wrap items-center gap-2 mt-2 pt-2 border-t border-slate-200/60">
+                <a
+                  href={`tel:${activeJob.pickupLocation.phone}`}
+                  className="inline-flex items-center gap-1 text-emerald-700 font-bold hover:underline"
+                >
+                  <Phone className="h-3 w-3" />
+                  <span>Call Merchant ({activeJob.pickupLocation.phone})</span>
+                </a>
+                <span className="text-slate-300">|</span>
+                <a
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+                    `${activeJob.pickupLocation.address}, ${activeJob.pickupLocation.area}, Tamale, Ghana`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-lg border border-slate-200 text-slate-700 font-bold hover:border-emerald-500 hover:text-emerald-700 transition"
+                >
+                  <Navigation className="h-3 w-3 text-emerald-600" />
+                  <span>Turn-by-Turn to Store</span>
+                </a>
+              </div>
             </div>
 
             {/* Step 2: Dropoff Location */}
@@ -450,13 +513,27 @@ export default function RiderPortalPage() {
                   Note: "{activeJob.dropoffLocation.deliveryInstructions}"
                 </p>
               )}
-              <a
-                href={`tel:${activeJob.dropoffLocation.phone}`}
-                className="inline-flex items-center gap-1 text-emerald-700 font-bold hover:underline mt-1"
-              >
-                <Phone className="h-3 w-3" />
-                <span>Call Customer ({activeJob.dropoffLocation.phone})</span>
-              </a>
+              <div className="flex flex-wrap items-center gap-2 mt-2 pt-2 border-t border-slate-200/60">
+                <a
+                  href={`tel:${activeJob.dropoffLocation.phone}`}
+                  className="inline-flex items-center gap-1 text-emerald-700 font-bold hover:underline"
+                >
+                  <Phone className="h-3 w-3" />
+                  <span>Call Customer ({activeJob.dropoffLocation.phone})</span>
+                </a>
+                <span className="text-slate-300">|</span>
+                <a
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+                    `${activeJob.dropoffLocation.address}, ${activeJob.dropoffLocation.area}, Tamale, Ghana`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-lg border border-slate-200 text-slate-700 font-bold hover:border-emerald-500 hover:text-emerald-700 transition"
+                >
+                  <Navigation className="h-3 w-3 text-emerald-600" />
+                  <span>Turn-by-Turn to Dropoff</span>
+                </a>
+              </div>
             </div>
 
             {/* Step 3: OTP Verification Form */}

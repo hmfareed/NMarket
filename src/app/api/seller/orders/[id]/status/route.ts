@@ -4,7 +4,9 @@ import { getSessionUser } from "@/lib/jwt";
 import { Order } from "@/models/Order";
 import { Store } from "@/models/Store";
 import { User } from "@/models/User";
+import { Delivery } from "@/models/Delivery";
 import { sendRiderDispatchAlert } from "@/lib/notifications";
+import { autoDispatchDelivery } from "@/lib/dispatch-engine";
 
 export async function PATCH(
   req: Request,

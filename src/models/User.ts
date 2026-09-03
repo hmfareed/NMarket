@@ -50,6 +50,11 @@ export interface IUser extends Document {
     currentEarnings: number;
     totalCompletedDeliveries: number;
     rating: number;
+    currentLocation?: {
+      type: "Point";
+      coordinates: [number, number];
+      updatedAt?: Date;
+    };
   };
   addresses: IAddress[];
   createdAt: Date;
@@ -126,6 +131,11 @@ const UserSchema = new Schema<IUser>(
       currentEarnings: { type: Number, default: 0 },
       totalCompletedDeliveries: { type: Number, default: 0 },
       rating: { type: Number, default: 5.0 },
+      currentLocation: {
+        type: { type: String, enum: ["Point"], default: "Point" },
+        coordinates: { type: [Number], default: [-0.8393, 9.4008] },
+        updatedAt: { type: Date },
+      },
     },
     addresses: [AddressSchema],
   },

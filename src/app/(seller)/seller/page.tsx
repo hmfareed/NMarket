@@ -279,15 +279,18 @@ export default function SellerPortalPage() {
                   View pending buyer purchases, prepare items, and hand over to riders.
                 </p>
               </Link>
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-2">
+              <Link
+                href="/seller/analytics"
+                className="bg-white p-5 rounded-2xl border border-slate-200 space-y-2 hover:border-emerald-500 hover:shadow-xs transition block"
+              >
                 <div className="flex items-center gap-2 text-slate-900 font-bold text-xs">
                   <TrendingUp className="h-4 w-4 text-emerald-600" />
-                  <span>Wallet & Payouts</span>
+                  <span>Analytics & Intelligence</span>
                 </div>
                 <p className="text-[11px] text-slate-500">
-                  Track pending and available sales balances and withdraw to your MoMo.
+                  7-day revenue velocity, stockout alerts, top-selling items, and fulfillment scorecards.
                 </p>
-              </div>
+              </Link>
             </div>
           </div>
         )}
