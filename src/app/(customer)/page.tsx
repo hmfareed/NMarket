@@ -23,6 +23,7 @@ import {
 import { formatGHS } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 import CustomerHeader from "@/components/customer/CustomerHeader";
+import MegaCategoryNav from "@/components/customer/MegaCategoryNav";
 
 interface CategoryData {
   _id: string;
@@ -157,6 +158,19 @@ export default function CustomerMarketplace() {
         onSearchChange={setSearchQuery}
         selectedArea={selectedArea}
         onAreaChange={setSelectedArea}
+      />
+
+      {/* Desktop Big-Screen Mega Category Lineup with Multi-Column Hover Dropdowns */}
+      <MegaCategoryNav
+        activeCategory={selectedCategory}
+        onSelectCategory={(catName) => {
+          setSelectedCategory(catName);
+          setSearchQuery("");
+        }}
+        onSelectSubcategory={(subName, catName) => {
+          setSelectedCategory(catName);
+          setSearchQuery(subName);
+        }}
       />
 
       {/* Main Container - Fills Left and Right Side with edge-to-edge feel */}

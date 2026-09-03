@@ -88,9 +88,11 @@ export default function CustomerHeader({
 
             {/* Mobile Brand Icon + Greeting */}
             <div className="sm:hidden flex items-center gap-2 min-w-0">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center font-black text-white text-xs shadow-xs shrink-0">
-                N&apos;
-              </div>
+              <img
+                src="/logo.png"
+                alt="NorthMarket"
+                className="w-8 h-8 object-contain rounded-xl shrink-0"
+              />
               <div className="flex flex-col min-w-0">
                 <span className="text-xs font-black text-slate-900 truncate leading-tight flex items-center gap-1">
                   {greeting}, {userName || "Shopper"} 👋

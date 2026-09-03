@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface LogoProps {
   variant?: "light" | "dark" | "pill";
@@ -16,53 +17,38 @@ export default function Logo({
   href = "/",
   className = "",
 }: LogoProps) {
-  const iconSizes = {
-    sm: "h-7 w-7 text-xs rounded-lg",
-    md: "h-9 w-9 text-sm rounded-xl",
-    lg: "h-12 w-12 text-base rounded-2xl",
-  };
-
-  const textSizes = {
-    sm: "text-base",
-    md: "text-xl",
-    lg: "text-2xl",
+  const heightClasses = {
+    sm: "h-7 sm:h-8",
+    md: "h-9 sm:h-10",
+    lg: "h-12 sm:h-14",
   };
 
   const content = (
-    <div className={`flex items-center gap-2.5 select-none ${className}`}>
-      {/* Brand Icon: Shopping Bag with N' */}
+    <div className={`flex items-center gap-2 select-none ${className}`}>
+      {/* Official NorthMarket Logo from @/UI/logo */}
       <div
-        className={`${iconSizes[size]} relative flex items-center justify-center font-black tracking-tighter shadow-xs transition-transform hover:scale-105 ${
+        className={`relative ${heightClasses[size]} flex items-center transition-transform hover:scale-105 duration-200 ${
           variant === "dark"
-            ? "bg-amber-500 text-dark-900"
-            : "bg-gradient-to-br from-amber-500 to-amber-600 text-white"
+            ? "bg-white/10 p-1 rounded-xl backdrop-blur-xs"
+            : ""
         }`}
       >
-        {/* Subtle bag handle curve */}
-        <div className="absolute -top-1 w-3.5 h-2 border-2 border-amber-400 rounded-t-full pointer-events-none opacity-80" />
-        <span className="font-extrabold tracking-tight">N&apos;</span>
+        <img
+          src="/logo.png"
+          alt="NorthMarket"
+          className={`${heightClasses[size]} w-auto object-contain`}
+        />
       </div>
 
-      <div className="flex flex-col">
-        <div className="flex items-center">
-          <span
-            className={`font-black tracking-tight ${textSizes[size]} ${
-              variant === "dark" ? "text-white" : "text-slate-900"
-            }`}
-          >
-            North<span className="text-amber-500">Market</span>
-          </span>
-        </div>
-        {showTagline && (
-          <span
-            className={`text-[10px] font-medium tracking-wide -mt-1 ${
-              variant === "dark" ? "text-amber-400/90" : "text-slate-500"
-            }`}
-          >
-            Shop local. Get it faster.
-          </span>
-        )}
-      </div>
+      {showTagline && (
+        <span
+          className={`text-[10px] font-medium tracking-wide hidden sm:block ${
+            variant === "dark" ? "text-amber-400/90" : "text-slate-500"
+          }`}
+        >
+          Shop local. Get it faster.
+        </span>
+      )}
     </div>
   );
 
