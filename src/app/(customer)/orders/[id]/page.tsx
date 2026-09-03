@@ -17,6 +17,10 @@ import {
   Star,
   AlertTriangle,
   X,
+  Phone,
+  MessageSquare,
+  Navigation,
+  KeyRound,
 } from "lucide-react";
 import { formatGHS } from "@/lib/utils";
 
@@ -107,12 +111,12 @@ export default function OrderTrackingPage({
     if (!order) return;
     navigator.clipboard.writeText(order.deliveryOtp);
     setCopiedOtp(true);
-    setTimeout(() => setCopiedOtp(false), 2000);
+    setTimeout(() => setCopiedOtp(false), 2500);
   };
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!order || !reviewItem) return;
+    if (!reviewItem || !order) return;
     setReviewLoading(true);
     setReviewMessage(null);
     try {
@@ -181,7 +185,7 @@ export default function OrderTrackingPage({
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <div className="flex items-center gap-2 text-xs text-slate-500 font-bold">
-          <Loader2 className="h-5 w-5 animate-spin text-emerald-600" />
+          <Loader2 className="h-5 w-5 animate-spin text-amber-500" />
           <span>Loading order tracking...</span>
         </div>
       </div>
@@ -195,7 +199,7 @@ export default function OrderTrackingPage({
           <p className="text-sm font-bold text-slate-900">Order not found</p>
           <Link
             href="/"
-            className="block text-xs font-bold text-emerald-600 hover:underline"
+            className="block text-xs font-bold text-amber-600 hover:underline"
           >
             ← Return to Marketplace
           </Link>
@@ -204,351 +208,415 @@ export default function OrderTrackingPage({
     );
   }
 
+  // Stepper logic matching reference
+  const isDelivered = order.status === "COMPLETED";
+  const isOutForDelivery =
+    order.status === "PROCESSING" ||
+    order.sellerOrders.some((so) => so.status === "HANDED_TO_RIDER");
+  const isPreparing =
+    order.status === "PAID" ||
+    order.sellerOrders.some((so) => ["ACCEPTED", "READY_FOR_PICKUP"].includes(so.status));
+
+  const steps = [
+    {
+      title: "Order Placed",
+      time: new Date(order.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      done: true,
+    },
+    {
+      title: "Seller Confirmed",
+      time: "Confirmed",
+      done: true,
+    },
+    {
+      title: "Order Preparing",
+      time: "In kitchen / stall",
+      done: isPreparing || isOutForDelivery || isDelivered,
+    },
+    {
+      title: "Rider Picked Up",
+      time: "En route",
+      done: isOutForDelivery || isDelivered,
+    },
+    {
+      title: "Out for Delivery",
+      time: "Local dispatch",
+      active: isOutForDelivery && !isDelivered,
+      done: isDelivered,
+    },
+    {
+      title: "Delivered",
+      time: "Handover with OTP",
+      done: isDelivered,
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto space-y-6">
-        {/* Top Header */}
+    <div className="min-h-screen bg-slate-50 py-6 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl mx-auto space-y-5">
+        {/* Top Header matching reference: "← Track Order" */}
         <div className="flex items-center justify-between">
           <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 font-bold"
+            href="/orders"
+            className="inline-flex items-center gap-2 text-xs text-slate-600 hover:text-slate-900 font-bold p-2 bg-white rounded-xl border border-slate-200 shadow-xs"
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            <span>Continue Shopping</span>
+            <ArrowLeft className="h-4 w-4" />
+            <span>Track Order</span>
           </Link>
-          <span className="font-mono text-xs text-slate-400 font-bold">
-            Order Ref: {order.orderNumber}
+          <span className="text-xs font-mono font-bold text-slate-500">
+            Order #{order.orderNumber}
           </span>
         </div>
 
-        {/* Order Confirmed Banner */}
-        <div className="bg-emerald-600 text-white rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="space-y-1 text-center sm:text-left">
-            <div className="inline-flex items-center gap-1.5 bg-emerald-700 text-emerald-100 text-[11px] font-bold px-2.5 py-0.5 rounded-full mb-1">
-              <CheckCircle2 className="h-3 w-3" />
-              <span>Payment Confirmed ({order.payment.provider})</span>
+        {/* Order Info & Placed Date */}
+        <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-card space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-lg font-black text-slate-900 tracking-tight">
+                Order #{order.orderNumber}
+              </h1>
+              <p className="text-xs text-slate-400">
+                Placed on {new Date(order.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+              </p>
             </div>
-            <h1 className="text-2xl font-black">Order Placed Successfully!</h1>
-            <p className="text-xs text-emerald-100">
-              Your items are being prepared by verified merchants in Tamale.
-            </p>
+            <span className="text-xs font-black bg-amber-50 text-amber-700 px-3 py-1 rounded-full border border-amber-200">
+              {order.status}
+            </span>
+          </div>
+
+          {/* Big Status Card matching reference: "Out for Delivery 🛵" */}
+          <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-2xl p-4 shadow-xs flex items-center justify-between">
+            <div className="space-y-0.5">
+              <span className="text-sm font-black flex items-center gap-1.5">
+                <span>{isDelivered ? "Delivered Successfully 🎉" : "Out for Delivery 🛵"}</span>
+              </span>
+              <p className="text-xs text-amber-100">
+                {isDelivered
+                  ? "Package handed over and verified via OTP."
+                  : "Your order is on the way through Tamale local fleet."}
+              </p>
+            </div>
           </div>
 
           {/* Delivery OTP Highlight Box */}
-          <div className="bg-white text-slate-900 rounded-2xl p-4 text-center shrink-0 w-full sm:w-auto shadow-md border-2 border-emerald-400">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
-              Delivery OTP Guard
-            </span>
-            <div className="flex items-center justify-center gap-2 mt-1">
-              <span className="text-3xl font-black font-mono tracking-widest text-emerald-700">
-                {order.deliveryOtp}
-              </span>
-              <button
-                onClick={copyOtp}
-                className="p-1.5 hover:bg-slate-100 rounded-lg transition text-slate-400"
-                title="Copy OTP"
-              >
-                {copiedOtp ? <Check className="h-4 w-4 text-emerald-600" /> : <Copy className="h-4 w-4" />}
-              </button>
-            </div>
-            <p className="text-[9px] text-slate-400 mt-1 max-w-[170px]">
-              Provide this 4-digit code to the delivery rider to release your order.
-            </p>
-          </div>
-        </div>
-
-        {/* Multi-Seller Fulfillment Timeline */}
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 space-y-4 shadow-xs">
-          <h2 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center justify-between">
-            <span className="flex items-center gap-2">
-              <Store className="h-4 w-4 text-emerald-600" />
-              <span>Merchant Fulfillment Packages ({order.sellerOrders.length})</span>
-            </span>
-            <span className="text-xs text-slate-400 font-medium">Split Order</span>
-          </h2>
-
-          <div className="space-y-4">
-            {order.sellerOrders.map((so) => (
-              <div
-                key={so.sellerOrderId}
-                className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="font-bold text-xs text-slate-900">{so.storeName}</span>
-                    <span className="text-[10px] text-slate-400 font-mono ml-2">
-                      ({so.sellerOrderId})
-                    </span>
-                  </div>
-                  <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                    <Clock className="h-3 w-3" />
-                    <span>{so.status}</span>
-                  </span>
-                </div>
-
-                {/* Items in this merchant order */}
-                <div className="divide-y divide-slate-100">
-                  {so.items.map((item, idx) => (
-                    <div key={idx} className="py-2.5 flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2">
-                        <Package className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                        <span className="text-slate-800 font-medium">{item.name}</span>
-                        <span className="text-slate-400">×{item.quantity}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="font-mono font-bold text-slate-900">
-                          {formatGHS(item.totalPrice)}
-                        </span>
-                        <button
-                          onClick={() => setReviewItem({ productId: item.productId, name: item.name })}
-                          className="text-[11px] text-emerald-700 bg-emerald-50 hover:bg-emerald-100 font-bold px-2 py-1 rounded-lg border border-emerald-200 transition flex items-center gap-1"
-                        >
-                          <Star className="h-3 w-3 fill-emerald-500 text-emerald-500" />
-                          <span>Review</span>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+          <div className="p-4 bg-amber-50/70 rounded-2xl border border-amber-200/80 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-amber-100 rounded-xl text-amber-700">
+                <KeyRound className="h-5 w-5" />
               </div>
-            ))}
-          </div>
-
-          {/* Report an Issue / Dispute Button */}
-          <div className="pt-2 flex justify-end">
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block">
+                  Delivery Handshake OTP
+                </span>
+                <span className="text-2xl font-black font-mono tracking-widest text-amber-800">
+                  {order.deliveryOtp}
+                </span>
+              </div>
+            </div>
             <button
-              onClick={() => setShowDisputeModal(true)}
-              className="text-xs text-slate-400 hover:text-amber-700 font-bold inline-flex items-center gap-1 transition"
+              onClick={copyOtp}
+              type="button"
+              className="flex items-center gap-1.5 bg-white text-slate-700 hover:text-amber-700 px-3 py-2 rounded-xl border border-slate-200 font-bold text-xs shadow-xs transition"
             >
-              <AlertTriangle className="h-3.5 w-3.5" />
-              <span>Report an Issue / Open Dispute with this Order</span>
+              {copiedOtp ? <Check className="h-4 w-4 text-emerald-600" /> : <Copy className="h-4 w-4" />}
+              <span>{copiedOtp ? "Copied" : "Copy OTP"}</span>
             </button>
           </div>
+
+          {/* Vertical Stepped Progress Tracker matching reference */}
+          <div className="pt-2">
+            <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider mb-4">
+              Live Order Status
+            </h3>
+            <div className="space-y-4 relative pl-6 border-l-2 border-slate-200 ml-3">
+              {steps.map((step, idx) => (
+                <div key={idx} className="relative">
+                  {/* Step Dot / Icon */}
+                  <div
+                    className={`absolute -left-[31px] top-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                      step.done
+                        ? "bg-emerald-500 text-white shadow-xs"
+                        : step.active
+                        ? "bg-amber-500 text-white ring-4 ring-amber-100 animate-pulse"
+                        : "bg-slate-200 text-slate-400"
+                    }`}
+                  >
+                    {step.done ? <Check className="h-3.5 w-3.5 stroke-[3]" /> : idx + 1}
+                  </div>
+
+                  <div>
+                    <p
+                      className={`text-xs font-bold ${
+                        step.done || step.active ? "text-slate-900" : "text-slate-400"
+                      }`}
+                    >
+                      {step.title}
+                    </p>
+                    <p className="text-[10px] text-slate-400">{step.time}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Delivery Address & Price Breakdown */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-white rounded-3xl border border-slate-200 p-5 space-y-2.5 shadow-xs text-xs">
-            <div className="flex items-center gap-1.5 font-bold text-slate-900 border-b border-slate-100 pb-2">
-              <MapPin className="h-4 w-4 text-emerald-600" />
-              <span>Delivery Details</span>
-            </div>
-            <p className="font-bold text-slate-900">{order.shippingAddress.recipient}</p>
-            <p className="text-slate-600">{order.shippingAddress.phone}</p>
-            <p className="text-slate-600">
-              {order.shippingAddress.area}, Tamale ({order.shippingAddress.pickupAddress})
-            </p>
-            {order.shippingAddress.landmark && (
-              <p className="text-slate-400 text-[11px]">
-                Landmark: {order.shippingAddress.landmark}
+        {/* Map Preview & Rider Contact Card matching reference */}
+        <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-card space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+              <MapPin className="h-4 w-4 text-amber-600" />
+              <span>Tamale Delivery Route</span>
+            </h3>
+            <span className="text-xs text-slate-500 font-medium">
+              {order.shippingAddress.area}, Tamale
+            </span>
+          </div>
+
+          {/* Stylized Map View Box */}
+          <div className="relative h-36 w-full rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center">
+            <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:16px_16px] opacity-60" />
+            <div className="relative flex flex-col items-center gap-1 text-center p-3">
+              <div className="p-3 bg-amber-500 text-white rounded-2xl shadow-elevated animate-bounce">
+                <Truck className="h-6 w-6" />
+              </div>
+              <p className="text-xs font-black text-slate-800">
+                Dispatch Route: {order.sellerOrders[0]?.storeName || "Tamale Merchant"} → {order.shippingAddress.area}
               </p>
+              <p className="text-[10px] text-slate-500">
+                Dropoff Address: {order.shippingAddress.pickupAddress}
+              </p>
+            </div>
+          </div>
+
+          {/* Rider Profile Card matching reference: "Abdul Rahman / Rating 4.8 / Call / Message" */}
+          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center font-black text-base shadow-xs">
+                AR
+              </div>
+              <div>
+                <h4 className="text-xs font-black text-slate-900">Abdul Rahman</h4>
+                <div className="flex items-center gap-1 text-[11px] text-slate-500 mt-0.5">
+                  <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
+                  <span className="font-bold text-slate-800">4.8</span>
+                  <span>• Tamale Local Rider</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <a
+                href="tel:0241234567"
+                className="p-2.5 bg-white hover:bg-amber-50 text-slate-700 hover:text-amber-700 rounded-xl border border-slate-200 shadow-xs transition"
+                title="Call Rider"
+              >
+                <Phone className="h-4 w-4" />
+              </a>
+              <a
+                href="sms:0241234567"
+                className="p-2.5 bg-white hover:bg-amber-50 text-slate-700 hover:text-amber-700 rounded-xl border border-slate-200 shadow-xs transition"
+                title="Message Rider"
+              >
+                <MessageSquare className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Order Items & Review Action */}
+        <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-card space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider">
+              Package Items
+            </h3>
+            <span className="text-xs font-bold text-slate-900">
+              Total: {formatGHS(order.totalAmount)}
+            </span>
+          </div>
+
+          <div className="divide-y divide-slate-100">
+            {order.sellerOrders.flatMap((so) =>
+              so.items.map((item, idx) => (
+                <div key={idx} className="py-3 flex items-center justify-between text-xs">
+                  <div className="space-y-0.5">
+                    <p className="font-bold text-slate-900">{item.name}</p>
+                    <p className="text-[11px] text-slate-400">
+                      {formatGHS(item.unitPrice)} × {item.quantity} • {so.storeName}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="font-black text-slate-900">
+                      {formatGHS(item.totalPrice)}
+                    </span>
+                    <button
+                      onClick={() => setReviewItem({ productId: item.productId, name: item.name })}
+                      className="text-[11px] font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 px-2.5 py-1 rounded-xl border border-amber-200 transition flex items-center gap-1"
+                    >
+                      <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
+                      <span>Review</span>
+                    </button>
+                  </div>
+                </div>
+              ))
             )}
           </div>
 
-          <div className="bg-white rounded-3xl border border-slate-200 p-5 space-y-2 shadow-xs text-xs">
-            <div className="flex items-center gap-1.5 font-bold text-slate-900 border-b border-slate-100 pb-2">
-              <ShieldCheck className="h-4 w-4 text-emerald-600" />
-              <span>Payment Receipt</span>
-            </div>
-            <div className="flex justify-between text-slate-600">
-              <span>Items Total:</span>
-              <span className="font-bold text-slate-900">{formatGHS(order.totalProductAmount)}</span>
-            </div>
-            <div className="flex justify-between text-slate-600">
-              <span>Tamale Delivery Fee:</span>
-              <span className="font-bold text-slate-900">{formatGHS(order.totalDeliveryFee)}</span>
-            </div>
-            <div className="pt-2 border-t border-slate-100 flex justify-between font-black text-sm text-slate-900">
-              <span>Total Paid:</span>
-              <span className="text-emerald-700">{formatGHS(order.totalAmount)}</span>
-            </div>
+          <div className="pt-2 flex justify-between items-center text-xs">
+            <button
+              onClick={() => setShowDisputeModal(true)}
+              className="text-slate-500 hover:text-rose-600 font-bold transition flex items-center gap-1"
+            >
+              <AlertTriangle className="h-3.5 w-3.5" />
+              <span>Report an Issue</span>
+            </button>
+            <Link
+              href="/"
+              className="font-bold text-amber-600 hover:text-amber-700"
+            >
+              Continue Shopping →
+            </Link>
           </div>
         </div>
+      </div>
 
-        {/* Review Modal */}
-        {reviewItem && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
-            <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+      {/* Review Modal */}
+      {reviewItem && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-elevated animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-black text-slate-900">
+                Review {reviewItem.name}
+              </h3>
+              <button
+                onClick={() => setReviewItem(null)}
+                className="p-1 text-slate-400 hover:text-slate-600 rounded-lg"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleReviewSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Rating: {reviewRating} / 5 Stars
+                </label>
                 <div className="flex items-center gap-2">
-                  <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
-                  <h3 className="font-bold text-slate-900 text-sm">Review Product</h3>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setReviewRating(star)}
+                      className="p-1 transition transform hover:scale-110"
+                    >
+                      <Star
+                        className={`h-6 w-6 ${
+                          star <= reviewRating
+                            ? "fill-amber-500 text-amber-500"
+                            : "text-slate-200"
+                        }`}
+                      />
+                    </button>
+                  ))}
                 </div>
-                <button
-                  onClick={() => setReviewItem(null)}
-                  className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100"
-                >
-                  <X className="h-4 w-4" />
-                </button>
               </div>
 
               <div>
-                <p className="font-bold text-xs text-slate-900">{reviewItem.name}</p>
-                <p className="text-[11px] text-slate-400">
-                  Share your experience with fellow Tamale shoppers
-                </p>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Your Review
+                </label>
+                <textarea
+                  required
+                  rows={3}
+                  value={reviewComment}
+                  onChange={(e) => setReviewComment(e.target.value)}
+                  placeholder="Share your experience with this item..."
+                  className="w-full p-3 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500"
+                />
               </div>
 
               {reviewMessage && (
-                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800">
+                <p className="text-xs font-bold text-amber-700 bg-amber-50 p-2 rounded-xl">
                   {reviewMessage}
-                </div>
+                </p>
               )}
 
-              <form onSubmit={handleReviewSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1.5">
-                    Rating (1 to 5 Stars)
-                  </label>
-                  <div className="flex items-center gap-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        key={star}
-                        type="button"
-                        onClick={() => setReviewRating(star)}
-                        className="p-1 hover:scale-110 transition"
-                      >
-                        <Star
-                          className={`h-6 w-6 ${
-                            star <= reviewRating
-                              ? "fill-amber-400 text-amber-400"
-                              : "text-slate-200"
-                          }`}
-                        />
-                      </button>
-                    ))}
-                    <span className="text-xs font-bold text-slate-600 ml-2">
-                      {reviewRating} of 5 Stars
-                    </span>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">
-                    Your Review Feedback
-                  </label>
-                  <textarea
-                    required
-                    rows={3}
-                    value={reviewComment}
-                    onChange={(e) => setReviewComment(e.target.value)}
-                    placeholder="e.g. Excellent quality smock! Delivered quickly in Lamashegu."
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
-                  />
-                </div>
-
-                <div className="flex items-center justify-end gap-2 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setReviewItem(null)}
-                    className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={reviewLoading}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2 px-5 rounded-xl transition shadow-xs flex items-center gap-1.5"
-                  >
-                    {reviewLoading ? (
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    ) : (
-                      <span>Submit Review</span>
-                    )}
-                  </button>
-                </div>
-              </form>
-            </div>
+              <button
+                type="submit"
+                disabled={reviewLoading}
+                className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs py-2.5 rounded-xl shadow-xs transition"
+              >
+                {reviewLoading ? "Submitting..." : "Submit Review"}
+              </button>
+            </form>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Dispute Modal */}
-        {showDisputeModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
-            <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <div className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-amber-600" />
-                  <h3 className="font-bold text-slate-900 text-sm">Open Order Dispute</h3>
-                </div>
-                <button
-                  onClick={() => setShowDisputeModal(false)}
-                  className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+      {/* Dispute Modal */}
+      {showDisputeModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-elevated animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-black text-slate-900">
+                Report Order Issue
+              </h3>
+              <button
+                onClick={() => setShowDisputeModal(false)}
+                className="p-1 text-slate-400 hover:text-slate-600 rounded-lg"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleDisputeSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Issue Reason
+                </label>
+                <select
+                  value={disputeReason}
+                  onChange={(e: any) => setDisputeReason(e.target.value)}
+                  className="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none"
                 >
-                  <X className="h-4 w-4" />
-                </button>
+                  <option value="WRONG_ITEM">Wrong item delivered</option>
+                  <option value="DAMAGED">Damaged item</option>
+                  <option value="MISSING_ITEM">Missing item</option>
+                  <option value="LATE_DELIVERY">Unacceptable delay</option>
+                  <option value="OTHER">Other issue</option>
+                </select>
               </div>
 
               <div>
-                <p className="font-bold text-xs text-slate-900">Order Ref: {order.orderNumber}</p>
-                <p className="text-[11px] text-slate-400">
-                  Our operations team investigates all disputes within 24 hours.
-                </p>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Details
+                </label>
+                <textarea
+                  required
+                  rows={3}
+                  value={disputeDescription}
+                  onChange={(e) => setDisputeDescription(e.target.value)}
+                  placeholder="Describe the issue with your order..."
+                  className="w-full p-3 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-rose-500"
+                />
               </div>
 
               {disputeMessage && (
-                <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800">
+                <p className="text-xs font-bold text-amber-700 bg-amber-50 p-2 rounded-xl">
                   {disputeMessage}
-                </div>
+                </p>
               )}
 
-              <form onSubmit={handleDisputeSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">
-                    Dispute Reason
-                  </label>
-                  <select
-                    value={disputeReason}
-                    onChange={(e) => setDisputeReason(e.target.value as any)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold outline-none"
-                  >
-                    <option value="WRONG_ITEM">Wrong item received</option>
-                    <option value="DAMAGED">Damaged or defective item</option>
-                    <option value="MISSING_ITEM">Item missing from package</option>
-                    <option value="LATE_DELIVERY">Delivery was excessively delayed</option>
-                    <option value="OTHER">Other issue</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">
-                    Describe what happened
-                  </label>
-                  <textarea
-                    required
-                    rows={4}
-                    value={disputeDescription}
-                    onChange={(e) => setDisputeDescription(e.target.value)}
-                    placeholder="Provide specific details about the issue with the item or delivery..."
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition"
-                  />
-                </div>
-
-                <div className="flex items-center justify-end gap-2 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowDisputeModal(false)}
-                    className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={disputeLoading}
-                    className="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs py-2 px-5 rounded-xl transition shadow-xs flex items-center gap-1.5"
-                  >
-                    {disputeLoading ? (
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    ) : (
-                      <span>Submit Dispute</span>
-                    )}
-                  </button>
-                </div>
-              </form>
-            </div>
+              <button
+                type="submit"
+                disabled={disputeLoading}
+                className="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs py-2.5 rounded-xl shadow-xs transition"
+              >
+                {disputeLoading ? "Filing..." : "Submit Report"}
+              </button>
+            </form>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

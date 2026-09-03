@@ -6,118 +6,81 @@ import Link from "next/link";
 import {
   Package,
   ArrowLeft,
-  Image as ImageIcon,
-  DollarSign,
-  AlertCircle,
-  CheckCircle2,
+  UploadCloud,
+  X,
+  Plus,
   Loader2,
+  CheckCircle2,
+  AlertCircle,
   Sparkles,
 } from "lucide-react";
 
-interface CategoryOption {
-  slug: string;
-  name: string;
-}
-
-const PRESET_PRODUCTS = [
-  {
-    title: "iPhone 13 Pro 128GB - Sierra Blue",
-    category: "phones-tech",
-    brand: "Apple",
-    price: 6500,
-    compareAtPrice: 7200,
-    onHand: 5,
-    description: "Mint condition, battery health 92%. Factory unlocked, comes with original box and fast charger. Available for immediate pickup in Tamale.",
-    imageUrl: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop&q=60",
-  },
-  {
-    title: "Handwoven Dagbon Traditional Smock (Fugu)",
-    category: "fashion-smocks",
-    brand: "Northern Artisans",
-    price: 350,
-    compareAtPrice: 420,
-    onHand: 12,
-    description: "100% authentic handwoven heavy cotton Northern Ghanaian smock. Made in Tamale with traditional embroidery. Size Large.",
-    imageUrl: "https://images.unsplash.com/photo-1544441893-675973e31985?w=600&auto=format&fit=crop&q=60",
-  },
-  {
-    title: "Raw Unrefined Northern Shea Butter (1kg)",
-    category: "shea-beauty",
-    brand: "Savannah Natural",
-    price: 45,
-    compareAtPrice: 55,
-    onHand: 50,
-    description: "Grade A organic raw golden unrefined shea butter from Northern Ghana. Deeply moisturizing, 100% natural, chemical-free.",
-    imageUrl: "https://images.unsplash.com/photo-1608248597359-25f0a82b4dc2?w=600&auto=format&fit=crop&q=60",
-  },
-];
-
-export default function NewProductPage() {
+export default function AddNewProductPage() {
   const router = useRouter();
-  const [categories, setCategories] = useState<CategoryOption[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Form Fields
+  // Form State
   const [name, setName] = useState("");
-  const [category, setCategory] = useState("");
-  const [brand, setBrand] = useState("");
-  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("Phones & Electronics");
   const [price, setPrice] = useState("");
-  const [compareAtPrice, setCompareAtPrice] = useState("");
-  const [onHand, setOnHand] = useState("10");
-  const [lowStockThreshold, setLowStockThreshold] = useState("2");
-  const [imageUrl, setImageUrl] = useState("");
+  const [discountPrice, setDiscountPrice] = useState("");
+  const [description, setDescription] = useState("");
+  const [stockQuantity, setStockQuantity] = useState("12");
+  const [sku, setSku] = useState("");
+  const [imageUrls, setImageUrls] = useState<string[]>([
+    "https://images.unsplash.com/photo-1544441893-675973e31985?w=500&auto=format&fit=crop&q=60",
+  ]);
+  const [customImageUrl, setCustomImageUrl] = useState("");
 
-  useEffect(() => {
-    async function loadCategories() {
-      try {
-        const res = await fetch("/api/categories");
-        if (res.ok) {
-          const data = await res.json();
-          setCategories(data.categories || []);
-          if (data.categories?.length > 0) {
-            setCategory(data.categories[0].slug);
-          }
-        }
-      } catch (err) {
-        console.error("Failed to load categories:", err);
-      }
-    }
-    loadCategories();
-  }, []);
+  const categories = [
+    "Phones & Electronics",
+    "Fashion",
+    "Shoes",
+    "Beauty & Personal Care",
+    "Groceries & Foodstuffs",
+    "Home & Living",
+    "Baby & Kids",
+    "Computers & Tech",
+    "Appliances",
+    "Accessories",
+    "Sports & Fitness",
+    "Local Crafts & Shea",
+  ];
 
-  const applyPreset = (preset: typeof PRESET_PRODUCTS[0]) => {
-    setName(preset.title);
-    setCategory(preset.category);
-    setBrand(preset.brand);
-    setPrice(preset.price.toString());
-    setCompareAtPrice(preset.compareAtPrice.toString());
-    setOnHand(preset.onHand.toString());
-    setDescription(preset.description);
-    setImageUrl(preset.imageUrl);
+  const handleAddImage = () => {
+    if (!customImageUrl.trim()) return;
+    setImageUrls([...imageUrls, customImageUrl.trim()]);
+    setCustomImageUrl("");
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
+  const handleRemoveImage = (index: number) => {
+    setImageUrls(imageUrls.filter((_, idx) => idx !== index));
+  };
+
+  const handlePublish = async (status: "PUBLISHED" | "DRAFT") => {
+    if (!name.trim() || !price) {
+      setError("Please provide a product title and price.");
+      return;
+    }
+
     setLoading(true);
+    setError(null);
 
     try {
       const res = await fetch("/api/seller/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name,
+          name: name.trim(),
           category,
-          brand,
-          description,
-          price: Number(price),
-          compareAtPrice: compareAtPrice ? Number(compareAtPrice) : undefined,
-          onHand: Number(onHand),
-          lowStockThreshold: Number(lowStockThreshold),
-          images: imageUrl ? [{ url: imageUrl, isPrimary: true }] : [],
-          status: "PUBLISHED",
+          price: parseFloat(price),
+          compareAtPrice: discountPrice ? parseFloat(discountPrice) : undefined,
+          description: description.trim(),
+          onHand: parseInt(stockQuantity) || 10,
+          sku: sku.trim() || undefined,
+          images: imageUrls.map((url, idx) => ({ url, isPrimary: idx === 0 })),
+          status,
         }),
       });
 
@@ -127,7 +90,6 @@ export default function NewProductPage() {
       }
 
       router.push("/seller/products");
-      router.refresh();
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -136,261 +98,249 @@ export default function NewProductPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/seller/products"
-              className="p-2 bg-white rounded-xl border border-slate-200 text-slate-500 hover:text-slate-800 transition"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Link>
-            <div>
-              <h1 className="text-xl font-black text-slate-900">Add New Product</h1>
-              <p className="text-xs text-slate-500">
-                Publish an item to buyers across the Tamale metropolis
-              </p>
-            </div>
+    <div className="max-w-6xl mx-auto space-y-6">
+      {/* Top Header matching UI Reference */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Link
+            href="/seller/products"
+            className="p-2 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition"
+          >
+            <ArrowLeft className="h-4 w-4 text-slate-600" />
+          </Link>
+          <div>
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              Add New Product
+            </h1>
+            <p className="text-xs text-slate-500">
+              Create a new item in your Tamale merchant catalog
+            </p>
           </div>
         </div>
 
-        {/* Preset Sample Autofill */}
-        <div className="bg-emerald-50/60 border border-emerald-200/80 rounded-2xl p-4 mb-6">
-          <div className="flex items-center gap-2 text-xs font-bold text-emerald-900 mb-2">
-            <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
-            <span>Fast Autofill Samples (Northern Ghana Favorites):</span>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {PRESET_PRODUCTS.map((p, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => applyPreset(p)}
-                className="text-[11px] font-bold bg-white text-emerald-800 hover:bg-emerald-100/50 border border-emerald-200 px-3 py-1.5 rounded-lg transition"
-              >
-                + {p.title.split("-")[0].trim()}
-              </button>
-            ))}
-          </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => handlePublish("DRAFT")}
+            className="px-4 py-2.5 rounded-2xl border border-slate-200 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 transition"
+          >
+            Save Draft
+          </button>
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => handlePublish("PUBLISHED")}
+            className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-xs transition flex items-center gap-2"
+          >
+            {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+            <span>Publish Product</span>
+          </button>
         </div>
+      </div>
 
-        {/* Main Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
-            <div className="p-3.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-start gap-2">
-              <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
-              <span>{error}</span>
-            </div>
-          )}
+      {error && (
+        <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl text-xs text-rose-700 flex items-center gap-2">
+          <AlertCircle className="h-4 w-4 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
 
-          {/* Section 1: Basic Information */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4 shadow-xs">
-            <h2 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2">
-              Basic Product Information
+      {/* 2-COLUMN FORM LAYOUT matching UI DESIGN.jpg reference */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* LEFT COLUMN: Basic Information & Inventory */}
+        <div className="lg:col-span-7 space-y-6">
+          {/* Basic Information Card */}
+          <div className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-card space-y-4">
+            <h2 className="text-sm font-black text-slate-900 border-b border-slate-100 pb-3">
+              Basic Information
             </h2>
 
+            {/* Product Name */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                Product Title *
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                Product Name *
               </label>
               <input
                 type="text"
-                required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. iPhone 13 Pro 128GB or Handwoven Fugu Smock"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
+                placeholder="e.g. Samsung Galaxy A15 or Handwoven Dagbon Smock"
+                className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-amber-500/30"
               />
             </div>
 
+            {/* Category */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                Category *
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-2xl outline-none font-bold text-slate-700"
+              >
+                {categories.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Price & Discount Price */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Marketplace Category *
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Price (GH₵) *
                 </label>
-                <select
-                  required
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
-                >
-                  {categories.map((c) => (
-                    <option key={c.slug} value={c.slug}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="e.g. 2499.00"
+                  className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-amber-500/30 font-mono font-bold"
+                />
               </div>
-
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Brand / Maker (Optional)
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Original Price (GH₵ Optional)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={discountPrice}
+                  onChange={(e) => setDiscountPrice(e.target.value)}
+                  placeholder="e.g. 2850.00 (shown crossed out)"
+                  className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-amber-500/30 font-mono"
+                />
+              </div>
+            </div>
+
+            {/* Description */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                Description
+              </label>
+              <textarea
+                rows={4}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Describe key specs, condition, or origin in Tamale..."
+                className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-amber-500/30 leading-relaxed"
+              />
+            </div>
+          </div>
+
+          {/* Inventory Card */}
+          <div className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-card space-y-4">
+            <h2 className="text-sm font-black text-slate-900 border-b border-slate-100 pb-3">
+              Inventory
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Stock Quantity *
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={stockQuantity}
+                  onChange={(e) => setStockQuantity(e.target.value)}
+                  placeholder="e.g. 12"
+                  className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-amber-500/30 font-mono font-bold"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  SKU (Optional)
                 </label>
                 <input
                   type="text"
-                  value={brand}
-                  onChange={(e) => setBrand(e.target.value)}
-                  placeholder="e.g. Apple, Samsung, or Local Artisan"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
+                  value={sku}
+                  onChange={(e) => setSku(e.target.value)}
+                  placeholder="e.g. SAM-A15-BLU"
+                  className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-2xl outline-none font-mono"
                 />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                Description & Specifications
-              </label>
-              <textarea
-                rows={3}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Provide accurate details (condition, warranty, sizes, ingredients)..."
-                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
-              />
-            </div>
-          </div>
-
-          {/* Section 2: Pricing & Two-Tier Inventory */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4 shadow-xs">
-            <h2 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2 flex items-center justify-between">
-              <span>Pricing & Stock Levels</span>
-              <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">
-                Currency: Ghana Cedi (GH₵)
-              </span>
-            </h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Selling Price (GH₵) *
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  required
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  placeholder="0.00"
-                  className="w-full px-3.5 py-2.5 font-bold font-mono bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Original Price / Strike-through (GH₵)
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={compareAtPrice}
-                  onChange={(e) => setCompareAtPrice(e.target.value)}
-                  placeholder="Optional comparison price"
-                  className="w-full px-3.5 py-2.5 font-mono bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Physical Stock On Hand (Units) *
-                </label>
-                <input
-                  type="number"
-                  required
-                  min={0}
-                  value={onHand}
-                  onChange={(e) => setOnHand(e.target.value)}
-                  className="w-full px-3.5 py-2.5 font-bold bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
-                />
-                <p className="text-[10px] text-slate-400 mt-1">
-                  Initial available stock will match units on hand.
-                </p>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Low Stock Warning Threshold
-                </label>
-                <input
-                  type="number"
-                  min={1}
-                  value={lowStockThreshold}
-                  onChange={(e) => setLowStockThreshold(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
-                />
-                <p className="text-[10px] text-slate-400 mt-1">
-                  Alerts you when stock falls below this quantity.
-                </p>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Section 3: Product Image */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4 shadow-xs">
-            <h2 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2">
-              Product Photo
+        {/* RIGHT COLUMN: Product Images matching UI Reference */}
+        <div className="lg:col-span-5 space-y-6">
+          <div className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-card space-y-4">
+            <h2 className="text-sm font-black text-slate-900 border-b border-slate-100 pb-3">
+              Product Images
             </h2>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                Image Web Link (URL)
-              </label>
+            {/* Drag & Drop Upload Zone */}
+            <div className="border-2 border-dashed border-slate-200 hover:border-amber-400 rounded-3xl p-6 text-center space-y-2 bg-slate-50/50 hover:bg-amber-50/20 transition cursor-pointer">
+              <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto">
+                <UploadCloud className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-slate-800">
+                  Drag & drop images here
+                </p>
+                <p className="text-[10px] text-slate-400 mt-0.5">
+                  or click to paste image URL
+                </p>
+              </div>
+            </div>
+
+            {/* Add Image URL Input */}
+            <div className="flex gap-2">
               <input
                 type="url"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://..."
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
+                value={customImageUrl}
+                onChange={(e) => setCustomImageUrl(e.target.value)}
+                placeholder="Paste web image URL..."
+                className="flex-1 px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none"
               />
+              <button
+                type="button"
+                onClick={handleAddImage}
+                className="px-3 py-2 bg-dark-900 text-amber-400 rounded-xl text-xs font-bold"
+              >
+                Add
+              </button>
             </div>
 
-            {imageUrl && (
-              <div className="mt-3 flex items-center gap-4 p-3 bg-slate-50 rounded-xl border border-slate-100">
-                <img
-                  src={imageUrl}
-                  alt="Product Preview"
-                  className="h-20 w-20 rounded-xl object-cover border border-slate-200 bg-white"
-                />
-                <div className="text-xs">
-                  <p className="font-bold text-slate-800">Image Preview Ready</p>
-                  <p className="text-[11px] text-slate-400">
-                    High quality photo will be displayed in customer search results.
-                  </p>
-                </div>
+            {/* Thumbnail Preview Strip matching UI reference */}
+            <div className="space-y-2 pt-2">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                Gallery Thumbnails ({imageUrls.length})
+              </span>
+              <div className="grid grid-cols-4 gap-2">
+                {imageUrls.map((img, idx) => (
+                  <div
+                    key={idx}
+                    className="relative aspect-square rounded-2xl overflow-hidden border border-slate-200 group"
+                  >
+                    <img src={img} alt="" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(idx)}
+                      className="absolute top-1 right-1 p-1 bg-dark-900/80 text-white rounded-full opacity-0 group-hover:opacity-100 transition"
+                      title="Remove image"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                    {idx === 0 && (
+                      <span className="absolute bottom-1 left-1 bg-amber-500 text-slate-950 font-black text-[8px] px-1.5 py-0.2 rounded-md">
+                        Cover
+                      </span>
+                    )}
+                  </div>
+                ))}
               </div>
-            )}
+            </div>
           </div>
-
-          {/* Submit Button */}
-          <div className="flex items-center justify-end gap-3 pt-2">
-            <Link
-              href="/seller/products"
-              className="text-xs font-bold text-slate-600 hover:text-slate-900 py-3 px-5 rounded-xl border border-slate-200 bg-white"
-            >
-              Cancel
-            </Link>
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex items-center gap-2 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white py-3 px-8 rounded-xl shadow-sm transition"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>Publishing Product...</span>
-                </>
-              ) : (
-                <>
-                  <span>Publish to Tamale Marketplace</span>
-                  <CheckCircle2 className="h-4 w-4" />
-                </>
-              )}
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   );
