@@ -86,12 +86,12 @@ export default function CustomerHeader({
               <Logo size="md" showTagline={false} />
             </div>
 
-            {/* Mobile Brand Icon + Greeting */}
-            <div className="sm:hidden flex items-center gap-2 min-w-0">
+            {/* Mobile Brand Logo + Greeting */}
+            <div className="sm:hidden flex items-center gap-2.5 min-w-0">
               <img
                 src="/logo.png"
                 alt="NorthMarket"
-                className="w-8 h-8 object-contain rounded-xl shrink-0"
+                className="h-10 w-auto object-contain shrink-0"
               />
               <div className="flex flex-col min-w-0">
                 <span className="text-xs font-black text-slate-900 truncate leading-tight flex items-center gap-1">
