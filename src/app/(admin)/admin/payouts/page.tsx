@@ -123,9 +123,9 @@ export default function AdminPayoutsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             <span>Escrow Settlements & MoMo Payouts</span>
-            <span className="text-xs font-bold bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold bg-blue-100 text-blue-900 px-2 py-0.5 rounded-full">
               Financial Clearing
             </span>
           </h1>
@@ -137,7 +137,7 @@ export default function AdminPayoutsPage() {
         <button
           onClick={handleGenerateAudit}
           disabled={auditLoading}
-          className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow-xs transition shrink-0"
+          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow-xs shadow-blue-600/20 transition shrink-0"
         >
           <RefreshCw className={`h-3.5 w-3.5 ${auditLoading ? "animate-spin" : ""}`} />
           <span>Audit & Discover Settlements</span>
@@ -145,8 +145,8 @@ export default function AdminPayoutsPage() {
       </div>
 
         {notification && (
-          <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-800 flex items-center gap-2 shadow-xs">
-            <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+          <div className="p-4 bg-blue-50 border border-blue-200 rounded-2xl text-xs text-blue-800 flex items-center gap-2 shadow-xs">
+            <CheckCircle2 className="h-4 w-4 text-blue-600 shrink-0" />
             <span>{notification}</span>
           </div>
         )}
@@ -173,9 +173,9 @@ export default function AdminPayoutsPage() {
               <span className="text-xs font-bold text-slate-400 uppercase tracking-wider truncate">
                 Total Disbursed
               </span>
-              <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="h-4 w-4 text-blue-600 shrink-0" />
             </div>
-            <p className="text-2xl font-black text-emerald-700 truncate" title={formatGHS(summary.totalDisbursed)}>
+            <p className="text-2xl font-black text-blue-700 truncate" title={formatGHS(summary.totalDisbursed)}>
               {formatGHS(summary.totalDisbursed)}
             </p>
             <p className="text-xs text-slate-400 truncate">
@@ -209,7 +209,7 @@ export default function AdminPayoutsPage() {
         {/* Payouts Table / Cards */}
         {loading ? (
           <div className="py-24 flex justify-center items-center gap-2 text-slate-400 text-xs">
-            <Loader2 className="h-5 w-5 animate-spin text-emerald-600" />
+            <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
             <span>Loading settlement records...</span>
           </div>
         ) : payouts.length === 0 ? (
@@ -234,8 +234,8 @@ export default function AdminPayoutsPage() {
                       <span
                         className={`inline-flex items-center gap-1 text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${
                           p.recipientType === "SELLER"
-                            ? "bg-emerald-100 text-emerald-800"
-                            : "bg-blue-100 text-blue-800"
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-indigo-100 text-indigo-800"
                         }`}
                       >
                         {p.recipientType === "SELLER" ? (
@@ -269,7 +269,7 @@ export default function AdminPayoutsPage() {
                       <span
                         className={`text-[10px] font-bold ${
                           p.status === "PAID"
-                            ? "text-emerald-600"
+                            ? "text-blue-600"
                             : "text-amber-600"
                         }`}
                       >
@@ -281,7 +281,7 @@ export default function AdminPayoutsPage() {
                       <button
                         onClick={() => handleDisburse(p._id)}
                         disabled={disburseLoading === p._id}
-                        className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white font-bold text-xs py-2 px-4 rounded-xl shadow-xs transition"
+                        className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white font-bold text-xs py-2 px-4 rounded-xl shadow-xs shadow-blue-600/20 transition"
                       >
                         {disburseLoading === p._id ? (
                           <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -293,7 +293,7 @@ export default function AdminPayoutsPage() {
                         )}
                       </button>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200">
+                      <span className="inline-flex items-center gap-1 text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200">
                         <CheckCircle2 className="h-3.5 w-3.5" />
                         <span>Paid to MoMo</span>
                       </span>

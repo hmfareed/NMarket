@@ -194,7 +194,7 @@ export default function AdminSellersPage() {
         <div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             <span>Store & Seller Management</span>
-            <span className="text-xs font-bold bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold bg-blue-100 text-blue-900 px-2 py-0.5 rounded-full">
               Tamale Merchants
             </span>
           </h1>
@@ -208,7 +208,7 @@ export default function AdminSellersPage() {
           onClick={fetchSellers}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-700 shadow-xs transition"
         >
-          <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin text-emerald-600" : ""}`} />
+          <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin text-blue-600" : ""}`} />
           <span>Refresh</span>
         </button>
       </div>
@@ -222,8 +222,8 @@ export default function AdminSellersPage() {
           </p>
         </div>
         <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs min-w-0 overflow-hidden">
-          <p className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider truncate">Active & Verified</p>
-          <p className="text-xl sm:text-2xl font-black text-emerald-600 mt-1 truncate" title={String(counts.verified)}>
+          <p className="text-[11px] font-bold text-blue-600 uppercase tracking-wider truncate">Active & Verified</p>
+          <p className="text-xl sm:text-2xl font-black text-blue-600 mt-1 truncate" title={String(counts.verified)}>
             {counts.verified}
           </p>
         </div>
@@ -259,7 +259,7 @@ export default function AdminSellersPage() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
                   activeTab === tab.id
-                    ? "bg-dark-900 text-emerald-400 font-black shadow-xs"
+                    ? "bg-dark-900 text-blue-400 font-black shadow-xs"
                     : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                 }`}
               >
@@ -268,7 +268,7 @@ export default function AdminSellersPage() {
                   <span
                     className={`text-[10px] px-1.5 py-0.2 rounded-full ${
                       activeTab === tab.id
-                        ? "bg-emerald-400 text-slate-950 font-black"
+                        ? "bg-blue-400 text-slate-950 font-black"
                         : "bg-slate-100 text-slate-600 font-bold"
                     }`}
                   >
@@ -287,7 +287,7 @@ export default function AdminSellersPage() {
               placeholder="Search store, phone, area..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 pl-8 pr-3 py-1.5 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+              className="w-full bg-slate-50 border border-slate-200 pl-8 pr-3 py-1.5 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
             />
           </div>
         </div>
@@ -297,7 +297,7 @@ export default function AdminSellersPage() {
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
         {loading ? (
           <div className="py-20 flex items-center justify-center">
-            <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
+            <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
           </div>
         ) : filteredSellers.length === 0 ? (
           <div className="py-16 text-center space-y-2">
@@ -309,14 +309,14 @@ export default function AdminSellersPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-black text-slate-400 uppercase tracking-wider">
-                  <th className="py-3 px-4">Store & Merchant</th>
-                  <th className="py-3 px-4">Tamale Location</th>
+                <tr className="border-b border-slate-200/80 bg-slate-50/50 text-slate-400 font-black text-[11px] uppercase tracking-wider">
+                  <th className="py-3 px-4">Merchant & Store</th>
+                  <th className="py-3 px-4">Location</th>
                   <th className="py-3 px-4">Catalog</th>
                   <th className="py-3 px-4">Commission</th>
-                  <th className="py-3 px-4">Rating & Orders</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
+                  <th className="py-3 px-4">Performance</th>
+                  <th className="py-3 px-4">KYC Status</th>
+                  <th className="py-3 px-4 text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -330,13 +330,13 @@ export default function AdminSellersPage() {
                       {/* Store & Merchant */}
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 font-black text-xs flex items-center justify-center shrink-0">
+                          <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-200 text-blue-800 font-black text-xs flex items-center justify-center shrink-0">
                             {seller.name.slice(0, 2).toUpperCase()}
                           </div>
                           <div>
                             <p className="font-black text-slate-900 flex items-center gap-1">
                               <span>{seller.name}</span>
-                              {isVerified && <ShieldCheck className="h-3 w-3 text-emerald-500 fill-emerald-50" />}
+                              {isVerified && <ShieldCheck className="h-3 w-3 text-blue-500 fill-blue-50" />}
                             </p>
                             <p className="text-[10px] text-slate-400 font-mono">{seller.phone}</p>
                           </div>
@@ -358,7 +358,7 @@ export default function AdminSellersPage() {
 
                       {/* Commission */}
                       <td className="py-3 px-4">
-                        <span className="inline-flex items-center gap-0.5 font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200 text-[11px]">
+                        <span className="inline-flex items-center gap-0.5 font-bold text-blue-800 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-200 text-[11px]">
                           <Percent className="h-2.5 w-2.5" />
                           <span>{seller.commissionRate ?? 10}%</span>
                         </span>
@@ -373,7 +373,7 @@ export default function AdminSellersPage() {
                       {/* Status */}
                       <td className="py-3 px-4">
                         {isVerified && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200">
+                          <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase text-blue-700 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-200">
                             <CheckCircle2 className="h-3 w-3" />
                             <span>Active</span>
                           </span>
@@ -403,7 +403,7 @@ export default function AdminSellersPage() {
                         <button
                           type="button"
                           onClick={() => handleOpenStoreDrawer(seller)}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 bg-dark-900 hover:bg-slate-800 text-emerald-400 rounded-xl text-xs font-bold transition shadow-xs cursor-pointer"
+                          className="inline-flex items-center gap-1 px-2.5 py-1 bg-dark-900 hover:bg-slate-800 text-blue-400 rounded-xl text-xs font-bold transition shadow-xs cursor-pointer"
                         >
                           <Eye className="h-3 w-3" />
                           <span>Manage</span>
@@ -431,14 +431,14 @@ export default function AdminSellersPage() {
               {/* Drawer Top Header */}
               <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-xs">
+                  <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-xs shadow-blue-600/20">
                     {selectedSeller.name.slice(0, 2).toUpperCase()}
                   </div>
                   <div className="min-w-0">
                     <h2 className="text-sm font-black text-slate-900 truncate flex items-center gap-1.5">
                       <span>{selectedSeller.name}</span>
                       {selectedSeller.verificationStatus === "VERIFIED" && (
-                        <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+                        <ShieldCheck className="h-3.5 w-3.5 text-blue-500" />
                       )}
                     </h2>
                     <p className="text-[11px] text-slate-400 truncate">
@@ -463,7 +463,7 @@ export default function AdminSellersPage() {
                   onClick={() => setDrawerTab("DETAILS")}
                   className={`py-3 border-b-2 transition ${
                     drawerTab === "DETAILS"
-                      ? "border-emerald-600 text-slate-900 font-black"
+                      ? "border-blue-600 text-slate-900 font-black"
                       : "border-transparent text-slate-400 hover:text-slate-600"
                   }`}
                 >
@@ -474,7 +474,7 @@ export default function AdminSellersPage() {
                   onClick={() => setDrawerTab("KYC")}
                   className={`py-3 border-b-2 transition ${
                     drawerTab === "KYC"
-                      ? "border-emerald-600 text-slate-900 font-black"
+                      ? "border-blue-600 text-slate-900 font-black"
                       : "border-transparent text-slate-400 hover:text-slate-600"
                   }`}
                 >
@@ -485,7 +485,7 @@ export default function AdminSellersPage() {
                   onClick={() => setDrawerTab("PRODUCTS")}
                   className={`py-3 border-b-2 transition ${
                     drawerTab === "PRODUCTS"
-                      ? "border-emerald-600 text-slate-900 font-black"
+                      ? "border-blue-600 text-slate-900 font-black"
                       : "border-transparent text-slate-400 hover:text-slate-600"
                   }`}
                 >
@@ -511,7 +511,7 @@ export default function AdminSellersPage() {
                             type="button"
                             disabled={actionLoading}
                             onClick={() => handleUpdateStore("VERIFIED")}
-                            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-xs"
+                            className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs shadow-blue-600/20"
                           >
                             Approve Store
                           </button>
@@ -530,7 +530,7 @@ export default function AdminSellersPage() {
                             type="button"
                             disabled={actionLoading}
                             onClick={() => handleUpdateStore("VERIFIED")}
-                            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black transition shadow-xs"
+                            className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-black transition shadow-xs shadow-blue-600/20"
                           >
                             Reactivate
                           </button>
@@ -539,18 +539,18 @@ export default function AdminSellersPage() {
                     </div>
 
                     {/* Commercial Terms: Custom Commission Override */}
-                    <div className="bg-emerald-50/60 rounded-2xl p-4 border border-emerald-200/80 space-y-2">
+                    <div className="bg-blue-50/60 rounded-2xl p-4 border border-blue-200/80 space-y-2">
                       <div className="flex items-center justify-between">
                         <div>
-                          <label className="text-xs font-black text-emerald-950 flex items-center gap-1">
-                            <Percent className="h-3 w-3 text-emerald-600" />
+                          <label className="text-xs font-black text-blue-950 flex items-center gap-1">
+                            <Percent className="h-3 w-3 text-blue-600" />
                             <span>Marketplace Commission Rate</span>
                           </label>
-                          <p className="text-[11px] text-emerald-800/80">
+                          <p className="text-[11px] text-blue-800/80">
                             Standard rate is 10.0%. You can apply promotional or volume rates for this seller.
                           </p>
                         </div>
-                        <span className="text-base font-black text-emerald-950 font-mono">
+                        <span className="text-base font-black text-blue-950 font-mono">
                           {editCommission}%
                         </span>
                       </div>
@@ -563,7 +563,7 @@ export default function AdminSellersPage() {
                           step="0.5"
                           value={editCommission}
                           onChange={(e) => setEditCommission(Number(e.target.value))}
-                          className="w-full accent-emerald-600"
+                          className="w-full accent-blue-600"
                         />
                         <div className="flex gap-1">
                           {[5, 8, 10, 12].map((preset) => (
@@ -573,7 +573,7 @@ export default function AdminSellersPage() {
                               onClick={() => setEditCommission(preset)}
                               className={`px-2 py-1 rounded-lg text-[10px] font-bold border transition ${
                                 editCommission === preset
-                                  ? "bg-emerald-600 text-white border-emerald-600 font-black"
+                                  ? "bg-blue-600 text-white border-blue-600 font-black"
                                   : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
                               }`}
                             >
@@ -623,7 +623,7 @@ export default function AdminSellersPage() {
                         value={editNotes}
                         onChange={(e) => setEditNotes(e.target.value)}
                         placeholder="e.g. Verified in person by Tamale field agent. Premium smocks supplier."
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     </div>
                   </div>
@@ -644,7 +644,7 @@ export default function AdminSellersPage() {
                             Registered entity: {selectedSeller.businessType}
                           </p>
                         </div>
-                        <span className="px-2 py-1 bg-emerald-50 text-emerald-800 text-[10px] font-black rounded-lg border border-emerald-200">
+                        <span className="px-2 py-1 bg-blue-50 text-blue-800 text-[10px] font-black rounded-lg border border-blue-200">
                           Ghana Identity Verified
                         </span>
                       </div>
@@ -656,7 +656,7 @@ export default function AdminSellersPage() {
                         Mobile Money Payout Account
                       </p>
                       <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700">
+                        <div className="p-2 rounded-xl bg-blue-50 text-blue-700">
                           <CreditCard className="h-5 w-5" />
                         </div>
                         <div>
@@ -679,7 +679,7 @@ export default function AdminSellersPage() {
                   <div className="space-y-3">
                     {drawerLoading ? (
                       <div className="py-12 flex items-center justify-center">
-                        <Loader2 className="h-5 w-5 animate-spin text-emerald-600" />
+                        <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
                       </div>
                     ) : drawerProducts.length === 0 ? (
                       <div className="py-8 text-center text-slate-400 text-xs font-medium">
@@ -726,7 +726,7 @@ export default function AdminSellersPage() {
                   type="button"
                   disabled={actionLoading}
                   onClick={() => handleUpdateStore()}
-                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-xs transition flex items-center gap-1.5"
+                  className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-black text-xs rounded-xl shadow-xs shadow-blue-600/20 transition flex items-center gap-1.5"
                 >
                   {actionLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Check className="h-3.5 w-3.5 stroke-[3]" />}
                   <span>Save Store Changes</span>

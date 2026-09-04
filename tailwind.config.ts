@@ -34,6 +34,19 @@ export default {
           800: "#92400E",
           900: "#78350F",
         },
+        blue: {
+          50: "#EEF4FF",
+          100: "#E0EBFF",
+          200: "#C7D9FE",
+          300: "#9BBDFC",
+          400: "#4B85FA",
+          500: "#155DFC", // User's vibrant royal blue
+          600: "#0D4BD8",
+          700: "#0A3BB0",
+          800: "#112E6F", // Dark navy accent from swatch
+          900: "#0F1830",
+          950: "#080D1A",
+        },
         dark: {
           950: "#0D0E12",
           900: "#121318",

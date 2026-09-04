@@ -105,7 +105,7 @@ export default function AdminDisputesPage() {
         <div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             <span>Customer Disputes & Resolution Center</span>
-            <span className="text-xs font-bold bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold bg-blue-100 text-blue-900 px-2 py-0.5 rounded-full">
               Buyer Protection
             </span>
           </h1>
@@ -141,12 +141,12 @@ export default function AdminDisputesPage() {
         {/* Disputes Queue */}
         {loading ? (
           <div className="py-24 flex justify-center items-center gap-2 text-slate-400 text-xs">
-            <Loader2 className="h-5 w-5 animate-spin text-emerald-600" />
+            <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
             <span>Loading disputes...</span>
           </div>
         ) : disputes.length === 0 ? (
           <div className="bg-white rounded-3xl border border-slate-200 p-16 text-center max-w-md mx-auto space-y-3 shadow-xs">
-            <CheckCircle2 className="h-10 w-10 text-emerald-500 mx-auto" />
+            <CheckCircle2 className="h-10 w-10 text-blue-500 mx-auto" />
             <p className="text-sm font-bold text-slate-800">No disputes in this view</p>
             <p className="text-xs text-slate-500">
               Zero pending complaints or delivery issues reported by Tamale shoppers.
@@ -176,7 +176,7 @@ export default function AdminDisputesPage() {
                         : d.status === "UNDER_REVIEW"
                         ? "bg-blue-100 text-blue-800"
                         : d.status === "RESOLVED_REFUND"
-                        ? "bg-emerald-100 text-emerald-800"
+                        ? "bg-blue-100 text-blue-800"
                         : "bg-slate-100 text-slate-700"
                     }`}
                   >
@@ -202,7 +202,7 @@ export default function AdminDisputesPage() {
                     </div>
 
                     {d.adminNotes && (
-                      <p className="text-[11px] text-emerald-800 bg-emerald-50 p-2 rounded-lg border border-emerald-200">
+                      <p className="text-[11px] text-blue-800 bg-blue-50 p-2 rounded-lg border border-blue-200">
                         <strong>Admin Note:</strong> {d.adminNotes}
                       </p>
                     )}
@@ -215,7 +215,7 @@ export default function AdminDisputesPage() {
                         Merchant
                       </span>
                       <p className="font-bold text-slate-900 flex items-center gap-1">
-                        <Store className="h-3 w-3 text-emerald-600" />
+                        <Store className="h-3 w-3 text-blue-600" />
                         <span>{d.storeName}</span>
                       </p>
                     </div>
@@ -260,7 +260,7 @@ export default function AdminDisputesPage() {
                       <button
                         onClick={() => handleResolve(d._id, "RESOLVED_REFUND")}
                         disabled={actionLoading === d._id}
-                        className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition shadow-xs flex items-center gap-1"
+                        className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-xs shadow-blue-600/20 transition flex items-center gap-1"
                       >
                         <Check className="h-3.5 w-3.5" />
                         <span>Approve Refund</span>

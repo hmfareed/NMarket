@@ -75,7 +75,7 @@ export default function AdminDashboardPage() {
   if (loading) {
     return (
       <div className="py-20 flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
+        <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
       </div>
     );
   }
@@ -108,7 +108,7 @@ export default function AdminDashboardPage() {
           </div>
           <button
             type="button"
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-dark-900 text-emerald-400 text-xs font-bold shadow-xs hover:bg-dark-800 transition"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-dark-900 text-blue-400 text-xs font-bold shadow-xs hover:bg-dark-800 transition"
           >
             <Download className="h-3.5 w-3.5" />
             <span>Export</span>
@@ -117,13 +117,12 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* 5 KPI STAT CARDS matching UI DESIGN.jpg reference */}
-      {/* 5 KPI STAT CARDS matching UI DESIGN.jpg reference */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         {/* Total GMV */}
         <div className="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-card space-y-2 min-w-0 overflow-hidden flex flex-col justify-between">
           <div className="flex items-center justify-between text-xs font-bold text-slate-400 gap-2 min-w-0">
             <span className="truncate">Total GMV</span>
-            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-200 shrink-0">
+            <span className="text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-blue-200 shrink-0">
               +18.6%
             </span>
           </div>
@@ -139,12 +138,12 @@ export default function AdminDashboardPage() {
         <div className="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-card space-y-2 min-w-0 overflow-hidden flex flex-col justify-between">
           <div className="flex items-center justify-between text-xs font-bold text-slate-400 gap-2 min-w-0">
             <span className="truncate">Platform Revenue</span>
-            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-200 shrink-0">
+            <span className="text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-blue-200 shrink-0">
               +14.2%
             </span>
           </div>
           <div className="min-w-0" title={formatGHS(platformRevenue)}>
-            <p className="text-lg sm:text-xl lg:text-lg xl:text-xl 2xl:text-2xl font-black text-emerald-600 tracking-tight truncate">
+            <p className="text-lg sm:text-xl lg:text-lg xl:text-xl 2xl:text-2xl font-black text-blue-600 tracking-tight truncate">
               {formatGHS(platformRevenue)}
             </p>
           </div>
@@ -155,7 +154,7 @@ export default function AdminDashboardPage() {
         <div className="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-card space-y-2 min-w-0 overflow-hidden flex flex-col justify-between">
           <div className="flex items-center justify-between text-xs font-bold text-slate-400 gap-2 min-w-0">
             <span className="truncate">Orders</span>
-            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-200 shrink-0">
+            <span className="text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-blue-200 shrink-0">
               +16.4%
             </span>
           </div>
@@ -171,7 +170,7 @@ export default function AdminDashboardPage() {
         <div className="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-card space-y-2 min-w-0 overflow-hidden flex flex-col justify-between">
           <div className="flex items-center justify-between text-xs font-bold text-slate-400 gap-2 min-w-0">
             <span className="truncate">Active Sellers</span>
-            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-200 shrink-0">
+            <span className="text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-blue-200 shrink-0">
               +8.7%
             </span>
           </div>
@@ -187,7 +186,7 @@ export default function AdminDashboardPage() {
         <div className="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-card space-y-2 min-w-0 overflow-hidden flex flex-col justify-between">
           <div className="flex items-center justify-between text-xs font-bold text-slate-400 gap-2 min-w-0">
             <span className="truncate">Customers</span>
-            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-200 shrink-0">
+            <span className="text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-blue-200 shrink-0">
               +21.1%
             </span>
           </div>
@@ -211,11 +210,11 @@ export default function AdminDashboardPage() {
             </div>
             <div className="flex items-center gap-4 text-xs font-bold">
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
+                <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
                 <span className="text-slate-600">Orders</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-600" />
                 <span className="text-slate-600">Revenue (GH₵)</span>
               </div>
             </div>
@@ -241,11 +240,11 @@ export default function AdminDashboardPage() {
                       <div className="w-full flex items-end justify-center gap-1 h-full">
                         <div
                           style={{ height: `${ordHeights[idx]}%` }}
-                          className="w-2.5 bg-blue-400 rounded-t-md group-hover:bg-blue-500 transition-all"
+                          className="w-2.5 bg-slate-300 rounded-t-md group-hover:bg-slate-400 transition-all"
                         />
                         <div
                           style={{ height: `${revHeights[idx]}%` }}
-                          className="w-2.5 bg-emerald-500 rounded-t-md group-hover:bg-emerald-600 transition-all"
+                          className="w-2.5 bg-blue-600 rounded-t-md group-hover:bg-blue-700 transition-all"
                         />
                       </div>
                       <span className="text-[10px] font-bold text-slate-400 group-hover:text-slate-800 transition">
@@ -264,7 +263,7 @@ export default function AdminDashboardPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
-                <div className="p-2 bg-emerald-50 rounded-xl text-emerald-600">
+                <div className="p-2 bg-blue-50 rounded-xl text-blue-600">
                   <ShieldCheck className="h-5 w-5" />
                 </div>
                 <div>
@@ -284,7 +283,7 @@ export default function AdminDashboardPage() {
 
             <Link
               href="/admin/sellers"
-              className="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs py-3 rounded-2xl shadow-xs transition"
+              className="w-full inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-black text-xs py-3 rounded-2xl shadow-xs shadow-blue-600/20 transition"
             >
               <span>Review Sellers →</span>
             </Link>
@@ -298,13 +297,13 @@ export default function AdminDashboardPage() {
             <div className="grid grid-cols-2 gap-2 text-xs font-bold">
               <Link
                 href="/admin/delivery"
-                className="p-3 bg-slate-50 hover:bg-emerald-50 rounded-2xl border border-slate-200/80 text-slate-700 hover:text-emerald-700 transition block text-center"
+                className="p-3 bg-slate-50 hover:bg-blue-50 rounded-2xl border border-slate-200/80 text-slate-700 hover:text-blue-700 transition block text-center"
               >
                 Delivery Fleet
               </Link>
               <Link
                 href="/admin/payouts"
-                className="p-3 bg-slate-50 hover:bg-emerald-50 rounded-2xl border border-slate-200/80 text-slate-700 hover:text-emerald-700 transition block text-center"
+                className="p-3 bg-slate-50 hover:bg-blue-50 rounded-2xl border border-slate-200/80 text-slate-700 hover:text-blue-700 transition block text-center"
               >
                 MoMo Escrow
               </Link>
