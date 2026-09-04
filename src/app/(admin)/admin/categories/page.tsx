@@ -125,19 +125,27 @@ export default function AdminCategoriesPage() {
 
       {/* KPI Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs">
-          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Departments</p>
-          <p className="text-2xl font-black text-slate-900 mt-1">{categories.length}</p>
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs min-w-0 overflow-hidden">
+          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">Total Departments</p>
+          <p className="text-xl sm:text-2xl font-black text-slate-900 mt-1 truncate" title={String(categories.length)}>
+            {categories.length}
+          </p>
         </div>
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs">
-          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Active Subcategories</p>
-          <p className="text-2xl font-black text-emerald-600 mt-1">
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs min-w-0 overflow-hidden">
+          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">Active Subcategories</p>
+          <p
+            className="text-xl sm:text-2xl font-black text-emerald-600 mt-1 truncate"
+            title={String(categories.reduce((acc, c) => acc + (c.groups?.length || 0), 0))}
+          >
             {categories.reduce((acc, c) => acc + (c.groups?.length || 0), 0)}
           </p>
         </div>
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs">
-          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Indexed Product Items</p>
-          <p className="text-2xl font-black text-slate-700 mt-1">
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs min-w-0 overflow-hidden">
+          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">Indexed Product Items</p>
+          <p
+            className="text-xl sm:text-2xl font-black text-slate-700 mt-1 truncate"
+            title={`${categories.reduce((acc, c) => acc + (c.groups?.reduce((gAcc, g) => gAcc + g.items.length, 0) || 0), 0)}+`}
+          >
             {categories.reduce((acc, c) => acc + (c.groups?.reduce((gAcc, g) => gAcc + g.items.length, 0) || 0), 0)}+
           </p>
         </div>

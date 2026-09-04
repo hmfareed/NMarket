@@ -153,32 +153,32 @@ export default function AdminPayoutsPage() {
 
         {/* Escrow Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-1 min-w-0 overflow-hidden">
+            <div className="flex items-center justify-between gap-2 min-w-0">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider truncate">
                 Pending in Escrow
               </span>
-              <Clock className="h-4 w-4 text-amber-600" />
+              <Clock className="h-4 w-4 text-amber-600 shrink-0" />
             </div>
-            <p className="text-2xl font-black text-amber-700">
+            <p className="text-2xl font-black text-amber-700 truncate" title={formatGHS(summary.totalPending)}>
               {formatGHS(summary.totalPending)}
             </p>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-400 truncate">
               {summary.countPending} payouts ready for disbursement
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-1 min-w-0 overflow-hidden">
+            <div className="flex items-center justify-between gap-2 min-w-0">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider truncate">
                 Total Disbursed
               </span>
-              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+              <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
             </div>
-            <p className="text-2xl font-black text-emerald-700">
+            <p className="text-2xl font-black text-emerald-700 truncate" title={formatGHS(summary.totalDisbursed)}>
               {formatGHS(summary.totalDisbursed)}
             </p>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-400 truncate">
               {summary.countDisbursed} payments settled to MoMo
             </p>
           </div>

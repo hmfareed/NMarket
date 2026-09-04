@@ -92,43 +92,43 @@ export default function DeliveryCommandCenterPage() {
       {/* 4 Top KPI Cards matching UI DESIGN.jpg reference */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Active Deliveries */}
-        <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-card space-y-1">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-400">
-            <span>Active Deliveries</span>
-            <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
+        <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-card space-y-1 min-w-0 overflow-hidden">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-400 gap-2 min-w-0">
+            <span className="truncate">Active Deliveries</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse shrink-0" />
           </div>
-          <p className="text-2xl font-black text-slate-900 tracking-tight">42</p>
-          <p className="text-[10px] text-slate-400">On the road</p>
+          <p className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight truncate">42</p>
+          <p className="text-[10px] text-slate-400 truncate">On the road</p>
         </div>
 
         {/* Pending Pickups */}
-        <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-card space-y-1">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-400">
-            <span>Pending Pickups</span>
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+        <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-card space-y-1 min-w-0 overflow-hidden">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-400 gap-2 min-w-0">
+            <span className="truncate">Pending Pickups</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0" />
           </div>
-          <p className="text-2xl font-black text-amber-600 tracking-tight">16</p>
-          <p className="text-[10px] text-slate-400">Waiting for merchant handoff</p>
+          <p className="text-xl sm:text-2xl font-black text-amber-600 tracking-tight truncate">16</p>
+          <p className="text-[10px] text-slate-400 truncate">Waiting for merchant handoff</p>
         </div>
 
         {/* Delivered Today */}
-        <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-card space-y-1">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-400">
-            <span>Delivered Today</span>
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+        <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-card space-y-1 min-w-0 overflow-hidden">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-400 gap-2 min-w-0">
+            <span className="truncate">Delivered Today</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
           </div>
-          <p className="text-2xl font-black text-emerald-600 tracking-tight">28</p>
-          <p className="text-[10px] text-slate-400">Verified via OTP</p>
+          <p className="text-xl sm:text-2xl font-black text-emerald-600 tracking-tight truncate">28</p>
+          <p className="text-[10px] text-slate-400 truncate">Verified via OTP</p>
         </div>
 
         {/* Cancelled */}
-        <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-card space-y-1">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-400">
-            <span>Cancelled / Delayed</span>
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+        <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-card space-y-1 min-w-0 overflow-hidden">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-400 gap-2 min-w-0">
+            <span className="truncate">Cancelled / Delayed</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0" />
           </div>
-          <p className="text-2xl font-black text-rose-600 tracking-tight">3</p>
-          <p className="text-[10px] text-slate-400">Flagged incidents</p>
+          <p className="text-xl sm:text-2xl font-black text-rose-600 tracking-tight truncate">3</p>
+          <p className="text-[10px] text-slate-400 truncate">Flagged incidents</p>
         </div>
       </div>
 

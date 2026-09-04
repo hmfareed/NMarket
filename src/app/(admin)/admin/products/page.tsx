@@ -168,21 +168,29 @@ export default function AdminProductsPage() {
 
       {/* KPI Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs">
-          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Catalog</p>
-          <p className="text-2xl font-black text-slate-900 mt-1">{counts.total || products.length}</p>
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs min-w-0 overflow-hidden">
+          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">Total Catalog</p>
+          <p className="text-xl sm:text-2xl font-black text-slate-900 mt-1 truncate" title={String(counts.total || products.length)}>
+            {counts.total || products.length}
+          </p>
         </div>
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs">
-          <p className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">Published & Live</p>
-          <p className="text-2xl font-black text-emerald-600 mt-1">{counts.published}</p>
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs min-w-0 overflow-hidden">
+          <p className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider truncate">Published & Live</p>
+          <p className="text-xl sm:text-2xl font-black text-emerald-600 mt-1 truncate" title={String(counts.published)}>
+            {counts.published}
+          </p>
         </div>
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs">
-          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Draft / Moderated</p>
-          <p className="text-2xl font-black text-slate-700 mt-1">{counts.draft}</p>
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs min-w-0 overflow-hidden">
+          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider truncate">Draft / Moderated</p>
+          <p className="text-xl sm:text-2xl font-black text-slate-700 mt-1 truncate" title={String(counts.draft)}>
+            {counts.draft}
+          </p>
         </div>
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs">
-          <p className="text-[11px] font-bold text-rose-600 uppercase tracking-wider">Out of Stock</p>
-          <p className="text-2xl font-black text-rose-600 mt-1">{counts.outOfStock}</p>
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs min-w-0 overflow-hidden">
+          <p className="text-[11px] font-bold text-rose-600 uppercase tracking-wider truncate">Out of Stock</p>
+          <p className="text-xl sm:text-2xl font-black text-rose-600 mt-1 truncate" title={String(counts.outOfStock)}>
+            {counts.outOfStock}
+          </p>
         </div>
       </div>
 

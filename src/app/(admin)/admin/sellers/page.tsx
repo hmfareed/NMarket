@@ -215,23 +215,29 @@ export default function AdminSellersPage() {
 
       {/* KPI Stats Row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs">
-          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Stores</p>
-          <p className="text-2xl font-black text-slate-900 mt-1">{counts.total || sellers.length}</p>
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs min-w-0 overflow-hidden">
+          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">Total Stores</p>
+          <p className="text-xl sm:text-2xl font-black text-slate-900 mt-1 truncate" title={String(counts.total || sellers.length)}>
+            {counts.total || sellers.length}
+          </p>
         </div>
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs">
-          <p className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">Active & Verified</p>
-          <p className="text-2xl font-black text-emerald-600 mt-1">{counts.verified}</p>
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs min-w-0 overflow-hidden">
+          <p className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider truncate">Active & Verified</p>
+          <p className="text-xl sm:text-2xl font-black text-emerald-600 mt-1 truncate" title={String(counts.verified)}>
+            {counts.verified}
+          </p>
         </div>
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs">
-          <p className="text-[11px] font-bold text-amber-600 uppercase tracking-wider">Pending KYC</p>
-          <p className="text-2xl font-black text-amber-600 mt-1">
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs min-w-0 overflow-hidden">
+          <p className="text-[11px] font-bold text-amber-600 uppercase tracking-wider truncate">Pending KYC</p>
+          <p className="text-xl sm:text-2xl font-black text-amber-600 mt-1 truncate" title={String((counts.pending || 0) + (counts.underReview || 0))}>
             {(counts.pending || 0) + (counts.underReview || 0)}
           </p>
         </div>
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs">
-          <p className="text-[11px] font-bold text-rose-600 uppercase tracking-wider">Suspended Stores</p>
-          <p className="text-2xl font-black text-rose-600 mt-1">{counts.suspended || 0}</p>
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs min-w-0 overflow-hidden">
+          <p className="text-[11px] font-bold text-rose-600 uppercase tracking-wider truncate">Suspended Stores</p>
+          <p className="text-xl sm:text-2xl font-black text-rose-600 mt-1 truncate" title={String(counts.suspended || 0)}>
+            {counts.suspended || 0}
+          </p>
         </div>
       </div>
 

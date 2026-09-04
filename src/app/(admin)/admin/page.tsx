@@ -117,75 +117,86 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* 5 KPI STAT CARDS matching UI DESIGN.jpg reference */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      {/* 5 KPI STAT CARDS matching UI DESIGN.jpg reference */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         {/* Total GMV */}
-        <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-card space-y-2">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-400">
-            <span>Total GMV</span>
-            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-200">
+        <div className="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-card space-y-2 min-w-0 overflow-hidden flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-400 gap-2 min-w-0">
+            <span className="truncate">Total GMV</span>
+            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-200 shrink-0">
               +18.6%
             </span>
           </div>
-          <p className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-            {formatGHS(totalGmv)}
-          </p>
-          <p className="text-[10px] text-slate-400">Gross merchandise value</p>
+          <div className="min-w-0" title={formatGHS(totalGmv)}>
+            <p className="text-lg sm:text-xl lg:text-lg xl:text-xl 2xl:text-2xl font-black text-slate-900 tracking-tight truncate">
+              {formatGHS(totalGmv)}
+            </p>
+          </div>
+          <p className="text-[10px] text-slate-400 truncate">Gross merchandise value</p>
         </div>
 
         {/* Platform Revenue */}
-        <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-card space-y-2">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-400">
-            <span>Platform Revenue</span>
-            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-200">
+        <div className="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-card space-y-2 min-w-0 overflow-hidden flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-400 gap-2 min-w-0">
+            <span className="truncate">Platform Revenue</span>
+            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-200 shrink-0">
               +14.2%
             </span>
           </div>
-          <p className="text-xl sm:text-2xl font-black text-emerald-600 tracking-tight">
-            {formatGHS(platformRevenue)}
-          </p>
-          <p className="text-[10px] text-slate-400">Commission earnings</p>
+          <div className="min-w-0" title={formatGHS(platformRevenue)}>
+            <p className="text-lg sm:text-xl lg:text-lg xl:text-xl 2xl:text-2xl font-black text-emerald-600 tracking-tight truncate">
+              {formatGHS(platformRevenue)}
+            </p>
+          </div>
+          <p className="text-[10px] text-slate-400 truncate">Commission earnings</p>
         </div>
 
         {/* Orders */}
-        <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-card space-y-2">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-400">
-            <span>Orders</span>
-            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-200">
+        <div className="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-card space-y-2 min-w-0 overflow-hidden flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-400 gap-2 min-w-0">
+            <span className="truncate">Orders</span>
+            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-200 shrink-0">
               +16.4%
             </span>
           </div>
-          <p className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-            {totalOrders.toLocaleString()}
-          </p>
-          <p className="text-[10px] text-slate-400">Orders placed</p>
+          <div className="min-w-0" title={totalOrders.toLocaleString()}>
+            <p className="text-lg sm:text-xl lg:text-lg xl:text-xl 2xl:text-2xl font-black text-slate-900 tracking-tight truncate">
+              {totalOrders.toLocaleString()}
+            </p>
+          </div>
+          <p className="text-[10px] text-slate-400 truncate">Orders placed</p>
         </div>
 
         {/* Active Sellers */}
-        <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-card space-y-2">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-400">
-            <span>Active Sellers</span>
-            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-200">
+        <div className="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-card space-y-2 min-w-0 overflow-hidden flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-400 gap-2 min-w-0">
+            <span className="truncate">Active Sellers</span>
+            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-200 shrink-0">
               +8.7%
             </span>
           </div>
-          <p className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-            {activeSellers}
-          </p>
-          <p className="text-[10px] text-slate-400">Tamale verified stores</p>
+          <div className="min-w-0" title={String(activeSellers)}>
+            <p className="text-lg sm:text-xl lg:text-lg xl:text-xl 2xl:text-2xl font-black text-slate-900 tracking-tight truncate">
+              {activeSellers}
+            </p>
+          </div>
+          <p className="text-[10px] text-slate-400 truncate">Tamale verified stores</p>
         </div>
 
         {/* Customers */}
-        <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-card space-y-2">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-400">
-            <span>Customers</span>
-            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-200">
+        <div className="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-card space-y-2 min-w-0 overflow-hidden flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-400 gap-2 min-w-0">
+            <span className="truncate">Customers</span>
+            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-200 shrink-0">
               +21.1%
             </span>
           </div>
-          <p className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-            {totalCustomers.toLocaleString()}
-          </p>
-          <p className="text-[10px] text-slate-400">Registered accounts</p>
+          <div className="min-w-0" title={totalCustomers.toLocaleString()}>
+            <p className="text-lg sm:text-xl lg:text-lg xl:text-xl 2xl:text-2xl font-black text-slate-900 tracking-tight truncate">
+              {totalCustomers.toLocaleString()}
+            </p>
+          </div>
+          <p className="text-[10px] text-slate-400 truncate">Registered accounts</p>
         </div>
       </div>
 
