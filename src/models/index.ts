@@ -10,3 +10,4 @@ export * from "./Payout";
 export * from "./Review";
 export * from "./Dispute";
 export * from "./Transaction";
+export * from "./Activity";
