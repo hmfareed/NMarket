@@ -187,7 +187,7 @@ export default function AdminOrdersPage() {
         <div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             <span>Global Orders Fulfillment</span>
-            <span className="text-xs font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded-full">
               Tamale Metro
             </span>
           </h1>
@@ -201,7 +201,7 @@ export default function AdminOrdersPage() {
           onClick={fetchOrders}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-700 shadow-xs transition"
         >
-          <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin text-amber-500" : ""}`} />
+          <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin text-emerald-600" : ""}`} />
           <span>Refresh Queue</span>
         </button>
       </div>
@@ -247,7 +247,7 @@ export default function AdminOrdersPage() {
                 onClick={() => setStatusFilter(tab.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
                   statusFilter === tab.id
-                    ? "bg-dark-900 text-amber-400 font-black shadow-xs"
+                    ? "bg-dark-900 text-emerald-400 font-black shadow-xs"
                     : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                 }`}
               >
@@ -263,7 +263,7 @@ export default function AdminOrdersPage() {
               placeholder="Search order #, customer..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 pl-8 pr-3 py-1.5 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+              className="w-full bg-slate-50 border border-slate-200 pl-8 pr-3 py-1.5 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
             />
           </div>
         </div>
@@ -273,7 +273,7 @@ export default function AdminOrdersPage() {
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
         {loading ? (
           <div className="py-20 flex items-center justify-center">
-            <Loader2 className="h-6 w-6 animate-spin text-amber-500" />
+            <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
           </div>
         ) : orders.length === 0 ? (
           <div className="py-16 text-center space-y-2">
@@ -345,7 +345,7 @@ export default function AdminOrdersPage() {
                         <button
                           type="button"
                           onClick={() => setSelectedOrder(o)}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 bg-dark-900 hover:bg-slate-800 text-amber-400 rounded-xl text-xs font-bold transition shadow-xs cursor-pointer"
+                          className="inline-flex items-center gap-1 px-2.5 py-1 bg-dark-900 hover:bg-slate-800 text-emerald-400 rounded-xl text-xs font-bold transition shadow-xs cursor-pointer"
                         >
                           <Eye className="h-3 w-3" />
                           <span>Fulfill</span>
@@ -393,12 +393,12 @@ export default function AdminOrdersPage() {
               {/* Body */}
               <div className="flex-1 overflow-y-auto p-5 space-y-4 text-xs">
                 {/* Delivery Handshake Status (Release Guard) */}
-                <div className="bg-amber-50/60 rounded-2xl p-3.5 border border-amber-200/80 flex items-center justify-between">
+                <div className="bg-emerald-50/60 rounded-2xl p-3.5 border border-emerald-200/80 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <ShieldCheck className="h-4 w-4 text-amber-600" />
+                    <ShieldCheck className="h-4 w-4 text-emerald-600" />
                     <div>
-                      <p className="font-black text-amber-950">Tamale Delivery OTP Handshake</p>
-                      <p className="text-[10px] text-amber-800">
+                      <p className="font-black text-emerald-950">Tamale Delivery OTP Handshake</p>
+                      <p className="text-[10px] text-emerald-800">
                         {selectedOrder.deliveryOtp?.isVerified
                           ? "✓ Verified by customer on delivery"
                           : "Pending 6-digit confirmation code on doorstep"}
@@ -406,7 +406,7 @@ export default function AdminOrdersPage() {
                     </div>
                   </div>
                   {selectedOrder.deliveryOtp?.code && (
-                    <span className="font-mono font-black text-sm bg-white text-slate-900 px-2 py-1 rounded-lg border border-amber-200">
+                    <span className="font-mono font-black text-sm bg-white text-slate-900 px-2 py-1 rounded-lg border border-emerald-200">
                       {selectedOrder.deliveryOtp.code}
                     </span>
                   )}
@@ -429,7 +429,7 @@ export default function AdminOrdersPage() {
                       </p>
                     )}
                     {selectedOrder.deliveryAddress?.deliveryInstructions && (
-                      <p className="text-amber-700 bg-amber-50 p-2 rounded-lg text-[10px] border border-amber-200">
+                      <p className="text-emerald-800 bg-emerald-50 p-2 rounded-lg text-[10px] border border-emerald-200">
                         Instructions: &ldquo;{selectedOrder.deliveryAddress.deliveryInstructions}&rdquo;
                       </p>
                     )}
@@ -476,7 +476,7 @@ export default function AdminOrdersPage() {
                     </div>
                     <div className="flex justify-between font-black text-slate-900 text-sm pt-1 border-t border-slate-100">
                       <span>Total Amount</span>
-                      <span className="font-mono text-amber-600">{formatGHS(selectedOrder.totalAmount)}</span>
+                      <span className="font-mono text-emerald-600">{formatGHS(selectedOrder.totalAmount)}</span>
                     </div>
                   </div>
                 </div>

@@ -75,7 +75,7 @@ export default function AdminDashboardPage() {
   if (loading) {
     return (
       <div className="py-20 flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-amber-500" />
+        <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
       </div>
     );
   }
@@ -108,7 +108,7 @@ export default function AdminDashboardPage() {
           </div>
           <button
             type="button"
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-dark-900 text-amber-400 text-xs font-bold shadow-xs hover:bg-dark-800 transition"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-dark-900 text-emerald-400 text-xs font-bold shadow-xs hover:bg-dark-800 transition"
           >
             <Download className="h-3.5 w-3.5" />
             <span>Export</span>
@@ -140,7 +140,7 @@ export default function AdminDashboardPage() {
               +14.2%
             </span>
           </div>
-          <p className="text-xl sm:text-2xl font-black text-amber-600 tracking-tight">
+          <p className="text-xl sm:text-2xl font-black text-emerald-600 tracking-tight">
             {formatGHS(platformRevenue)}
           </p>
           <p className="text-[10px] text-slate-400">Commission earnings</p>
@@ -204,7 +204,7 @@ export default function AdminDashboardPage() {
                 <span className="text-slate-600">Orders</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                 <span className="text-slate-600">Revenue (GH₵)</span>
               </div>
             </div>
@@ -234,7 +234,7 @@ export default function AdminDashboardPage() {
                         />
                         <div
                           style={{ height: `${revHeights[idx]}%` }}
-                          className="w-2.5 bg-amber-500 rounded-t-md group-hover:bg-amber-600 transition-all"
+                          className="w-2.5 bg-emerald-500 rounded-t-md group-hover:bg-emerald-600 transition-all"
                         />
                       </div>
                       <span className="text-[10px] font-bold text-slate-400 group-hover:text-slate-800 transition">
@@ -253,7 +253,7 @@ export default function AdminDashboardPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
-                <div className="p-2 bg-amber-50 rounded-xl text-amber-600">
+                <div className="p-2 bg-emerald-50 rounded-xl text-emerald-600">
                   <ShieldCheck className="h-5 w-5" />
                 </div>
                 <div>
@@ -273,7 +273,7 @@ export default function AdminDashboardPage() {
 
             <Link
               href="/admin/sellers"
-              className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs py-3 rounded-2xl shadow-xs transition"
+              className="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs py-3 rounded-2xl shadow-xs transition"
             >
               <span>Review Sellers →</span>
             </Link>
@@ -287,13 +287,13 @@ export default function AdminDashboardPage() {
             <div className="grid grid-cols-2 gap-2 text-xs font-bold">
               <Link
                 href="/admin/delivery"
-                className="p-3 bg-slate-50 hover:bg-amber-50 rounded-2xl border border-slate-200/80 text-slate-700 hover:text-amber-700 transition block text-center"
+                className="p-3 bg-slate-50 hover:bg-emerald-50 rounded-2xl border border-slate-200/80 text-slate-700 hover:text-emerald-700 transition block text-center"
               >
                 Delivery Fleet
               </Link>
               <Link
                 href="/admin/payouts"
-                className="p-3 bg-slate-50 hover:bg-amber-50 rounded-2xl border border-slate-200/80 text-slate-700 hover:text-amber-700 transition block text-center"
+                className="p-3 bg-slate-50 hover:bg-emerald-50 rounded-2xl border border-slate-200/80 text-slate-700 hover:text-emerald-700 transition block text-center"
               >
                 MoMo Escrow
               </Link>

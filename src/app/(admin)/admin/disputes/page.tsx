@@ -99,48 +99,24 @@ export default function AdminDisputesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col">
+    <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
-      <header className="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/admin" className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-emerald-500 flex items-center justify-center text-slate-950 font-black text-lg">
-                N
-              </div>
-              <span className="font-bold text-white text-base tracking-tight">
-                NMarket <span className="text-emerald-400 font-medium text-xs">Admin</span>
-              </span>
-            </Link>
-            <span className="text-slate-500 text-xs">/</span>
-            <span className="text-xs font-bold text-slate-300">Disputes & Customer Protection</span>
-          </div>
-
-          <Link
-            href="/admin"
-            className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-white font-medium transition"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            <span>Dashboard</span>
-          </Link>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+            <span>Customer Disputes & Resolution Center</span>
+            <span className="text-xs font-bold bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded-full">
+              Buyer Protection
+            </span>
+          </h1>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Investigate buyer complaints, wrong item claims, and adjudicate refunds in Tamale.
+          </p>
         </div>
-      </header>
 
-      {/* Main Content */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-black text-slate-900">
-              Customer Disputes & Resolution Center
-            </h1>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Investigate buyer complaints, wrong item claims, and adjudicate refunds in Tamale
-            </p>
-          </div>
-
-          {/* Filter Tabs */}
-          <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 text-xs font-bold shadow-xs">
-            <Filter className="h-3 w-3 text-slate-400 ml-2" />
+        {/* Filter Tabs */}
+        <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 text-xs font-bold shadow-xs">
+          <Filter className="h-3 w-3 text-slate-400 ml-2" />
             {[
               { id: "ALL", label: `All (${counts.all})` },
               { id: "OPEN", label: `Open (${counts.open})` },
@@ -304,7 +280,6 @@ export default function AdminDisputesPage() {
             ))}
           </div>
         )}
-      </main>
     </div>
   );
 }

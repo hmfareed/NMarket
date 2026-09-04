@@ -142,7 +142,7 @@ export default function DeliveryCommandCenterPage() {
               <p className="text-[11px] text-slate-400">Live coordinates & active routes</p>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-200">
+              <span className="text-[10px] font-bold bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full border border-emerald-200">
                 Tamale Metropolis
               </span>
             </div>
@@ -155,8 +155,8 @@ export default function DeliveryCommandCenterPage() {
 
             {/* Pulsing Tamale Landmark Nodes */}
             <div className="absolute top-1/4 left-1/4 flex flex-col items-center gap-1">
-              <div className="w-3.5 h-3.5 rounded-full bg-amber-500 ring-4 ring-amber-500/30 animate-pulse" />
-              <span className="text-[9px] font-black text-amber-300 bg-dark-900/90 px-1.5 py-0.5 rounded shadow-xs">
+              <div className="w-3.5 h-3.5 rounded-full bg-emerald-500 ring-4 ring-emerald-500/30 animate-pulse" />
+              <span className="text-[9px] font-black text-emerald-300 bg-dark-900/90 px-1.5 py-0.5 rounded shadow-xs">
                 Sakasaka
               </span>
             </div>
@@ -176,15 +176,15 @@ export default function DeliveryCommandCenterPage() {
             </div>
 
             <div className="absolute bottom-1/3 right-1/4 flex flex-col items-center gap-1">
-              <div className="w-3.5 h-3.5 rounded-full bg-amber-400 ring-4 ring-amber-400/30 animate-pulse" />
-              <span className="text-[9px] font-black text-amber-200 bg-dark-900/90 px-1.5 py-0.5 rounded shadow-xs">
+              <div className="w-3.5 h-3.5 rounded-full bg-emerald-400 ring-4 ring-emerald-400/30 animate-pulse" />
+              <span className="text-[9px] font-black text-emerald-200 bg-dark-900/90 px-1.5 py-0.5 rounded shadow-xs">
                 Vittin
               </span>
             </div>
 
             <div className="relative z-10 p-4 bg-dark-950/80 backdrop-blur-md rounded-2xl border border-dark-800 text-center space-y-1">
               <p className="text-xs font-black text-white flex items-center gap-1.5 justify-center">
-                <Navigation className="h-4 w-4 text-amber-400" />
+                <Navigation className="h-4 w-4 text-emerald-400" />
                 <span>Geospatial Proximity Dispatch Active</span>
               </p>
               <p className="text-[10px] text-slate-400">
@@ -202,7 +202,7 @@ export default function DeliveryCommandCenterPage() {
                 <h2 className="text-sm font-black text-slate-900">Active Deliveries</h2>
                 <p className="text-[11px] text-slate-400">Real-time rider assignments</p>
               </div>
-              <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                 {filteredDeliveries.length} in progress
               </span>
             </div>
@@ -224,7 +224,7 @@ export default function DeliveryCommandCenterPage() {
               {filteredDeliveries.map((delivery) => (
                 <div key={delivery.id} className="py-3 flex items-center justify-between text-xs">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center font-black text-xs shrink-0">
+                    <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-black text-xs shrink-0">
                       {delivery.riderName[0]}
                     </div>
                     <div className="space-y-0.5">
@@ -244,7 +244,7 @@ export default function DeliveryCommandCenterPage() {
                     </span>
                     <a
                       href={`tel:${delivery.riderPhone}`}
-                      className="block text-[10px] font-bold text-slate-400 hover:text-amber-600"
+                      className="block text-[10px] font-bold text-slate-400 hover:text-emerald-600"
                     >
                       Call Rider
                     </a>
@@ -256,7 +256,7 @@ export default function DeliveryCommandCenterPage() {
 
           <Link
             href="/admin/orders"
-            className="w-full text-center text-xs font-bold text-slate-600 hover:text-amber-600 py-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition"
+            className="w-full text-center text-xs font-bold text-slate-600 hover:text-emerald-600 py-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition"
           >
             View all dispatch logs →
           </Link>

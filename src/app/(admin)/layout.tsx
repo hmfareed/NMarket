@@ -71,7 +71,7 @@ export default function AdminLayout({
                 href={item.href}
                 className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold transition-all duration-200 ${
                   isActive
-                    ? "bg-amber-500 text-dark-950 font-black shadow-glow"
+                    ? "bg-emerald-500 text-slate-950 font-black shadow-md shadow-emerald-500/25"
                     : "text-slate-400 hover:text-white hover:bg-dark-800"
                 }`}
               >
@@ -90,7 +90,7 @@ export default function AdminLayout({
           </div>
           <Link
             href="/"
-            className="text-xs text-amber-400 hover:text-amber-300 font-bold"
+            className="text-xs text-emerald-400 hover:text-emerald-300 font-bold"
             title="Customer View"
           >
             <ArrowUpRight className="h-4 w-4" />
@@ -129,7 +129,7 @@ export default function AdminLayout({
                     onClick={() => setMobileSidebarOpen(false)}
                     className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold transition ${
                       isActive
-                        ? "bg-amber-500 text-dark-950 font-black shadow-glow"
+                        ? "bg-emerald-500 text-slate-950 font-black shadow-md shadow-emerald-500/25"
                         : "text-slate-400 hover:text-white hover:bg-dark-800"
                     }`}
                   >
@@ -171,7 +171,7 @@ export default function AdminLayout({
               <input
                 type="text"
                 placeholder="Global search (merchants, orders, riders)..."
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-800 outline-none focus:ring-2 focus:ring-amber-500/30"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500/30"
               />
             </div>
 
@@ -180,12 +180,12 @@ export default function AdminLayout({
               className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 transition relative"
             >
               <Bell className="h-4 w-4" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-500 rounded-full" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-emerald-500 rounded-full" />
             </button>
 
             {/* Admin Profile */}
             <div className="flex items-center gap-2.5 pl-2 border-l border-slate-200">
-              <div className="w-8 h-8 rounded-xl bg-dark-900 text-amber-400 flex items-center justify-center font-black text-xs shadow-xs">
+              <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-black text-xs shadow-xs">
                 N
               </div>
               <div className="hidden sm:block text-left">

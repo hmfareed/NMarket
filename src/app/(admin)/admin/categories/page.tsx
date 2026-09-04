@@ -94,7 +94,7 @@ export default function AdminCategoriesPage() {
         <div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             <span>Marketplace Categories & Taxonomy</span>
-            <span className="text-xs font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded-full">
               Navigation Tree
             </span>
           </h1>
@@ -109,13 +109,13 @@ export default function AdminCategoriesPage() {
             onClick={fetchCategories}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-700 shadow-xs transition"
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin text-amber-500" : ""}`} />
+            <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin text-emerald-600" : ""}`} />
             <span>Refresh</span>
           </button>
           <button
             type="button"
             onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs rounded-xl shadow-xs transition"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-xs transition"
           >
             <Plus className="h-3.5 w-3.5 stroke-[3]" />
             <span>Add Department</span>
@@ -131,7 +131,7 @@ export default function AdminCategoriesPage() {
         </div>
         <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs">
           <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Active Subcategories</p>
-          <p className="text-2xl font-black text-amber-600 mt-1">
+          <p className="text-2xl font-black text-emerald-600 mt-1">
             {categories.reduce((acc, c) => acc + (c.groups?.length || 0), 0)}
           </p>
         </div>
@@ -152,7 +152,7 @@ export default function AdminCategoriesPage() {
             placeholder="Filter categories (e.g. Appliances, Computing, Shea)..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-200 pl-8 pr-3 py-1.5 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+            className="w-full bg-slate-50 border border-slate-200 pl-8 pr-3 py-1.5 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
           />
         </div>
       </div>
@@ -160,14 +160,14 @@ export default function AdminCategoriesPage() {
       {/* Category Grid */}
       {loading ? (
         <div className="py-20 flex items-center justify-center">
-          <Loader2 className="h-6 w-6 animate-spin text-amber-500" />
+          <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((cat) => (
             <div
               key={cat.id}
-              className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-col justify-between space-y-3 hover:border-amber-400 transition"
+              className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-col justify-between space-y-3 hover:border-emerald-500 transition"
             >
               <div>
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
@@ -213,7 +213,7 @@ export default function AdminCategoriesPage() {
                 <span>{cat.groups?.length || 0} sub-groups</span>
                 <Link
                   href={`/admin/products?category=${encodeURIComponent(cat.name)}`}
-                  className="font-bold text-amber-600 hover:underline"
+                  className="font-bold text-emerald-600 hover:underline"
                 >
                   View Products →
                 </Link>
@@ -246,7 +246,7 @@ export default function AdminCategoriesPage() {
                   placeholder="e.g. Solar & Renewable Power"
                   value={newCatName}
                   onChange={(e) => setNewCatName(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                 />
               </div>
 
@@ -257,7 +257,7 @@ export default function AdminCategoriesPage() {
                   placeholder="e.g. Solar panels, inverters, backup batteries in Tamale."
                   value={newCatDesc}
                   onChange={(e) => setNewCatDesc(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                 />
               </div>
             </div>
@@ -274,7 +274,7 @@ export default function AdminCategoriesPage() {
                 type="button"
                 disabled={actionLoading}
                 onClick={handleAddCategory}
-                className="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs rounded-xl shadow-xs transition flex items-center gap-1.5"
+                className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-xs transition flex items-center gap-1.5"
               >
                 {actionLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                 <span>Create Department</span>

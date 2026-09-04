@@ -103,7 +103,7 @@ export default function AdminSettingsPage() {
   if (loading) {
     return (
       <div className="py-20 flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-amber-500" />
+        <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
       </div>
     );
   }
@@ -115,7 +115,7 @@ export default function AdminSettingsPage() {
         <div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             <span>Marketplace Platform Settings</span>
-            <span className="text-xs font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded-full">
               Rules & Tariffs
             </span>
           </h1>
@@ -128,7 +128,7 @@ export default function AdminSettingsPage() {
           type="button"
           disabled={saving}
           onClick={handleSave}
-          className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs rounded-xl shadow-xs transition"
+          className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-xs transition"
         >
           {saving ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -144,7 +144,7 @@ export default function AdminSettingsPage() {
       {/* 1. Commission Structure */}
       <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
         <div className="flex items-center gap-2.5 border-b border-slate-100 pb-3">
-          <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
+          <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
             <Percent className="h-5 w-5" />
           </div>
           <div>
@@ -168,7 +168,7 @@ export default function AdminSettingsPage() {
               step="0.5"
               value={commissionRate}
               onChange={(e) => setCommissionRate(Number(e.target.value))}
-              className="w-full accent-amber-500"
+              className="w-full accent-emerald-600"
             />
             <span className="text-xs font-mono font-bold text-slate-600 w-12 text-right">
               {commissionRate}%
@@ -267,7 +267,7 @@ export default function AdminSettingsPage() {
                 onChange={(e) => setSelfRegistration(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+              <div className="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600"></div>
             </label>
           </div>
 
@@ -285,7 +285,7 @@ export default function AdminSettingsPage() {
                 onChange={(e) => setSmsNotifications(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+              <div className="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600"></div>
             </label>
           </div>
         </div>

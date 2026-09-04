@@ -147,7 +147,7 @@ export default function AdminProductsPage() {
         <div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             <span>Marketplace Products Catalog</span>
-            <span className="text-xs font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded-full">
               Tamale Inventory
             </span>
           </h1>
@@ -161,7 +161,7 @@ export default function AdminProductsPage() {
           onClick={fetchProducts}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-bold text-slate-700 shadow-xs transition"
         >
-          <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin text-amber-500" : ""}`} />
+          <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin text-emerald-600" : ""}`} />
           <span>Refresh</span>
         </button>
       </div>
@@ -197,7 +197,7 @@ export default function AdminProductsPage() {
               placeholder="Search product name, brand, store..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 pl-8 pr-3 py-1.5 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+              className="w-full bg-slate-50 border border-slate-200 pl-8 pr-3 py-1.5 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
             />
           </div>
 
@@ -340,7 +340,7 @@ export default function AdminProductsPage() {
                           <Link
                             href={`/products/${p._id}`}
                             target="_blank"
-                            className="p-1.5 text-slate-400 hover:text-amber-600 rounded-lg hover:bg-slate-100 transition"
+                            className="p-1.5 text-slate-400 hover:text-emerald-600 rounded-lg hover:bg-slate-100 transition"
                             title="View on Customer App"
                           >
                             <ExternalLink className="h-3.5 w-3.5" />
@@ -348,7 +348,7 @@ export default function AdminProductsPage() {
                           <button
                             type="button"
                             onClick={() => handleOpenEdit(p)}
-                            className="inline-flex items-center gap-1 px-2 py-1 bg-slate-100 hover:bg-dark-900 hover:text-amber-400 text-slate-700 rounded-lg text-xs font-bold transition shadow-xs cursor-pointer"
+                            className="inline-flex items-center gap-1 px-2 py-1 bg-slate-100 hover:bg-dark-900 hover:text-emerald-400 text-slate-700 rounded-lg text-xs font-bold transition shadow-xs cursor-pointer"
                           >
                             <Edit2 className="h-3 w-3" />
                             <span>Edit</span>
@@ -439,7 +439,7 @@ export default function AdminProductsPage() {
                 type="button"
                 disabled={actionLoading}
                 onClick={handleSaveEdit}
-                className="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs rounded-xl shadow-xs transition flex items-center gap-1.5"
+                className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-xs transition flex items-center gap-1.5"
               >
                 {actionLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                 <span>Save Changes</span>
