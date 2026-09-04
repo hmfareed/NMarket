@@ -52,8 +52,8 @@ export default function SellerLayout({
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex font-sans text-slate-900">
-      {/* DESKTOP SIDEBAR (Exact Dark Charcoal matching UI DESIGN.jpg reference) */}
-      <aside className="hidden lg:flex flex-col w-64 bg-dark-900 text-slate-300 border-r border-dark-800 shrink-0 select-none">
+      {/* DESKTOP SIDEBAR (Fixed in viewport when scrolling pages) */}
+      <aside className="hidden lg:flex flex-col w-64 bg-dark-900 text-slate-300 border-r border-dark-800 shrink-0 select-none fixed top-0 left-0 bottom-0 z-40 h-screen">
         {/* Logo Brand Header */}
         <div className="h-16 px-6 flex items-center border-b border-dark-800/80">
           <Logo variant="dark" size="md" href="/seller" showTagline={false} />
@@ -142,7 +142,7 @@ export default function SellerLayout({
       )}
 
       {/* MAIN VIEWPORT */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
         {/* Top Navbar */}
         <header className="h-16 bg-white border-b border-slate-200/80 px-4 sm:px-8 flex items-center justify-between gap-4 sticky top-0 z-30 shadow-xs">
           {/* Mobile hamburger + Breadcrumb */}

@@ -16,27 +16,24 @@ export default function Logo({
   href = "/",
   className = "",
 }: LogoProps) {
-  // Generous height classes so the logo is prominent and crisp
+  // Height classes for crisp display across viewports
   const heightClasses = {
-    sm: "h-8",
-    md: "h-11 sm:h-12",
-    lg: "h-14 sm:h-16",
+    sm: "h-7",
+    md: "h-9 sm:h-10",
+    lg: "h-12 sm:h-14",
   };
+
+  // Dedicated transparent dark-mode logo (white text & cart + gold ribbon) vs transparent light-mode logo
+  const logoSrc = variant === "dark" ? "/logo-dark.png" : "/logo-transparent.png";
 
   const content = (
     <div className={`flex items-center gap-2 select-none ${className}`}>
-      {/* Official NorthMarket Logo - Tightly cropped for maximum prominence */}
-      <div
-        className={`relative flex items-center transition-transform hover:scale-105 duration-200 ${
-          variant === "dark"
-            ? "bg-white p-1 rounded-xl shadow-xs"
-            : ""
-        }`}
-      >
+      {/* Official NorthMarket Logo - Seamlessly integrated without white background */}
+      <div className="relative flex items-center transition-transform hover:scale-105 duration-200">
         <img
-          src="/logo.png"
+          src={logoSrc}
           alt="NorthMarket"
-          className={`${heightClasses[size]} w-auto object-contain`}
+          className={`${heightClasses[size]} w-auto object-contain drop-shadow-xs`}
         />
       </div>
 

@@ -47,9 +47,9 @@ export default function AdminLayout({
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex font-sans text-slate-900">
-      {/* DESKTOP ADMIN SIDEBAR (Matching UI DESIGN.jpg reference) */}
-      <aside className="hidden lg:flex flex-col w-64 bg-dark-900 text-slate-300 border-r border-dark-800 shrink-0 select-none">
-        {/* Logo Header */}
+      {/* DESKTOP ADMIN SIDEBAR (Fixed in viewport when scrolling pages) */}
+      <aside className="hidden lg:flex flex-col w-64 bg-dark-900 text-slate-300 border-r border-dark-800 shrink-0 select-none fixed top-0 left-0 bottom-0 z-40 h-screen">
+        {/* Logo Header - Seamlessly integrated dark logo */}
         <div className="h-16 px-6 flex items-center border-b border-dark-800/80">
           <Logo variant="dark" size="md" href="/admin" showTagline={false} />
         </div>
@@ -144,7 +144,7 @@ export default function AdminLayout({
       )}
 
       {/* MAIN VIEWPORT */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
         {/* Top Navbar matching UI Reference */}
         <header className="h-16 bg-white border-b border-slate-200/80 px-4 sm:px-8 flex items-center justify-between gap-4 sticky top-0 z-30 shadow-xs">
           <div className="flex items-center gap-3">
