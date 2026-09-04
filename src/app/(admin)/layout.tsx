@@ -22,6 +22,7 @@ import {
   ShieldCheck,
   ArrowUpRight,
   AlertCircle,
+  Activity as ActivityIcon,
 } from "lucide-react";
 import Logo from "@/components/brand/Logo";
 
@@ -35,10 +36,12 @@ export default function AdminLayout({
 
   const navItems = [
     { label: "Dashboard", href: "/admin", icon: LayoutDashboard, exact: true },
+    { label: "Orders", href: "/admin/orders", icon: ShoppingBag },
+    { label: "Customers", href: "/admin/customers", icon: Users },
+    { label: "Operations Activity", href: "/admin/activity", icon: ActivityIcon },
     { label: "Stores & Sellers", href: "/admin/sellers", icon: Store },
     { label: "Products Catalog", href: "/admin/products", icon: Package },
     { label: "Categories", href: "/admin/categories", icon: Tag },
-    { label: "Orders Fulfillment", href: "/admin/orders", icon: ShoppingBag },
     { label: "Delivery & Fleet", href: "/admin/delivery", icon: Truck },
     { label: "Disputes", href: "/admin/disputes", icon: AlertCircle },
     { label: "Finance & Payouts", href: "/admin/payouts", icon: DollarSign },

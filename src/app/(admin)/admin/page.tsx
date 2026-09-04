@@ -869,12 +869,11 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* MAIN TWO-COLUMN DASHBOARD GRID */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
-        {/* LEFT / MAIN COLUMN (8 cols): Revenue Analytics Chart + Recent Orders Table directly underneath */}
-        <div className="xl:col-span-8 space-y-6">
-          {/* 1. LIVE REVENUE ANALYTICS CARD (Matching Reference Image media_1788520865777.png) */}
-          <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-card space-y-5">
+      {/* ROW 2: SIDE-BY-SIDE: REVENUE ANALYTICS & OPERATIONS ACTIVITY */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-stretch">
+        {/* Left: LIVE REVENUE ANALYTICS CARD (7 cols) */}
+        <div className="xl:col-span-7 flex flex-col">
+          <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-card space-y-5 flex-1 flex flex-col justify-between">
             {/* Header: Title & Period Switcher */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
@@ -890,7 +889,7 @@ export default function AdminDashboardPage() {
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-400 mt-0.5">
-                  Showing sales velocity & transaction checkpoints for {activeData.label}
+                  Sales velocity & checkpoints for {activeData.label}
                 </p>
               </div>
 
@@ -957,7 +956,7 @@ export default function AdminDashboardPage() {
               <div className="flex items-center gap-4 text-[11px] text-slate-500">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full border-2 border-blue-600 bg-white" />
-                  <span>Checkpoint Node</span>
+                  <span>Checkpoint</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="w-3 h-0.5 bg-blue-600 rounded-full" />
@@ -1103,255 +1102,257 @@ export default function AdminDashboardPage() {
               </div>
             </div>
           </div>
+        </div>
 
-          {/* 2. RECENT CUSTOMER ORDERS TABLE (Directly under Revenue Analytics Card) */}
-          <div className="bg-white rounded-3xl border border-slate-200/80 shadow-card overflow-hidden">
-            <div className="p-5 sm:p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <h2 className="text-base font-black text-slate-900 tracking-tight">
-                  Recent Customer Orders
-                </h2>
-                <p className="text-[11px] text-slate-400 mt-0.5">
-                  Live orders across Tamale metropolis with customer details, exact timestamp, and delivery status
-                </p>
+        {/* Right: OPERATIONS ACTIVITY CARD (5 cols - Side by Side with Revenue Analytics) */}
+        <div className="xl:col-span-5 flex flex-col">
+          <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-card space-y-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 bg-blue-50 text-blue-600 rounded-xl">
+                      <ActivityIcon className="h-4 w-4" />
+                    </div>
+                    <h2 className="text-sm font-black text-slate-900">
+                      Operations Activity
+                    </h2>
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    Live store changes, cart actions & audit events
+                  </p>
+                </div>
+
+                <span className="flex items-center gap-1 text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full shrink-0">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
+                  Live Feed
+                </span>
               </div>
 
-              <Link
-                href="/admin/orders"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline transition self-start sm:self-auto"
-              >
-                <span>View Full Orders Hub</span>
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
+              {/* Filter Pills */}
+              <div className="flex flex-wrap gap-1 text-[11px] font-bold pt-3 pb-2">
+                {[
+                  { id: "ALL", label: "All" },
+                  { id: "ORDERS", label: "Orders" },
+                  { id: "STORE", label: "Store" },
+                  { id: "CART", label: "Cart" },
+                  { id: "REFUNDS", label: "Refunds" },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setActivityFilter(tab.id)}
+                    className={`px-2.5 py-1 rounded-xl transition cursor-pointer ${
+                      activityFilter === tab.id
+                        ? "bg-blue-600 text-white shadow-xs"
+                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/70 text-[10px] font-black text-slate-400 uppercase tracking-wider">
-                    <th className="py-3 px-4 sm:px-6">Order ID</th>
-                    <th className="py-3 px-4">Customer</th>
-                    <th className="py-3 px-4">Total</th>
-                    <th className="py-3 px-4">Delivery Status</th>
-                    <th className="py-3 px-4">Date & Exact Time</th>
-                    <th className="py-3 px-4 sm:px-6 text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {orders.slice(0, 7).map((order) => {
-                    const dt = formatExactDateTime(order.createdAt);
-                    return (
-                      <tr
-                        key={order._id}
-                        className="hover:bg-blue-50/30 transition group cursor-pointer"
-                        onClick={() => setSelectedOrder(order)}
-                      >
-                        <td className="py-3.5 px-4 sm:px-6">
-                          <span className="font-mono font-black text-slate-900 group-hover:text-blue-600 transition">
-                            #{order.orderNumber}
-                          </span>
-                        </td>
-
-                        <td className="py-3.5 px-4">
-                          <div>
-                            <p className="font-bold text-slate-900">
-                              {order.customerSnapshot?.name || "Tamale Customer"}
-                            </p>
-                            <p className="text-[10px] text-slate-400">
-                              {order.deliveryAddress?.area || "Tamale Central"}
-                            </p>
-                          </div>
-                        </td>
-
-                        <td className="py-3.5 px-4">
-                          <span className="font-mono font-black text-slate-900">
-                            {formatGHS(order.totalAmount)}
-                          </span>
-                        </td>
-
-                        <td className="py-3.5 px-4">{getStatusBadge(order.status)}</td>
-
-                        <td className="py-3.5 px-4">
-                          <div className="font-mono">
-                            <p className="font-bold text-slate-700">{dt.date}</p>
-                            <p className="text-[10px] text-slate-400 flex items-center gap-1">
-                              <Clock className="h-2.5 w-2.5 text-slate-400" />
-                              <span>{dt.time}</span>
-                            </p>
-                          </div>
-                        </td>
-
-                        <td className="py-3.5 px-4 sm:px-6 text-right">
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedOrder(order);
-                            }}
-                            className="inline-flex items-center gap-1 px-3 py-1.5 bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 rounded-xl text-xs font-bold transition shadow-xs cursor-pointer group-hover:bg-blue-600 group-hover:text-white"
+              {/* Scrollable Activities Stream */}
+              <div className="space-y-2.5 max-h-[295px] overflow-y-auto pr-1">
+                {filteredActivities.length === 0 ? (
+                  <div className="py-8 text-center text-slate-400 text-xs">
+                    No activity events found in this filter.
+                  </div>
+                ) : (
+                  filteredActivities.map((act, idx) => (
+                    <div
+                      key={act._id || idx}
+                      className="p-3 rounded-2xl bg-slate-50/70 border border-slate-200/70 space-y-1.5 hover:bg-blue-50/20 hover:border-blue-200 transition"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-start gap-2.5 min-w-0">
+                          <div
+                            className={`p-1.5 rounded-xl shrink-0 border mt-0.5 ${getActivityBg(
+                              act.type
+                            )}`}
                           >
-                            <Eye className="h-3 w-3" />
-                            <span>View</span>
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                            {getActivityIcon(act.type)}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-xs font-black text-slate-900 leading-snug">
+                              {act.title}
+                            </p>
+                            <p className="text-[11px] text-slate-600 leading-relaxed mt-0.5">
+                              {act.description}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium pt-1 border-t border-slate-100/80">
+                        <span className="text-slate-500 font-semibold truncate">
+                          {act.actorName ? `By ${act.actorName}` : "System Event"}
+                        </span>
+                        <span className="shrink-0 font-mono">
+                          {formatRelativeTime(act.createdAt)}
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
 
-            <div className="p-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between text-xs text-slate-500">
-              <span>Showing latest customer orders</span>
+            {/* Footer linking to dedicated /admin/activity page */}
+            <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span className="text-slate-400 text-[11px]">Audit log streaming</span>
               <Link
-                href="/admin/orders"
+                href="/admin/activity"
                 className="font-bold text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1"
               >
-                <span>Fulfill Orders ({orders.length})</span>
+                <span>View Full Activity Stream</span>
                 <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* RIGHT COLUMN (4 cols): Operations Activity Feed + Shortcuts */}
-        <div className="xl:col-span-4 space-y-6">
-          {/* OPERATIONS ACTIVITY CARD */}
-          <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-card space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-blue-50 text-blue-600 rounded-xl">
-                    <ActivityIcon className="h-4 w-4" />
-                  </div>
-                  <h2 className="text-sm font-black text-slate-900">
-                    Operations Activity
-                  </h2>
-                </div>
-                <p className="text-[11px] text-slate-400 mt-1">
-                  Live store-wide changes, cart actions & audit events
-                </p>
-              </div>
+      {/* ROW 3: FULL-WIDTH RECENT CUSTOMER ORDERS TABLE */}
+      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-card overflow-hidden">
+        <div className="p-5 sm:p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 className="text-base font-black text-slate-900 tracking-tight">
+              Recent Customer Orders
+            </h2>
+            <p className="text-[11px] text-slate-400 mt-0.5">
+              Live orders across Tamale metropolis with customer details, exact timestamp, and delivery status
+            </p>
+          </div>
 
-              <span className="flex items-center gap-1 text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
-                Live Feed
-              </span>
-            </div>
+          <Link
+            href="/admin/orders"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline transition self-start sm:self-auto"
+          >
+            <span>View Full Orders Hub</span>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
 
-            {/* Filter Pills */}
-            <div className="flex flex-wrap gap-1 text-[11px] font-bold">
-              {[
-                { id: "ALL", label: "All" },
-                { id: "ORDERS", label: "Orders" },
-                { id: "STORE", label: "Store" },
-                { id: "CART", label: "Cart" },
-                { id: "REFUNDS", label: "Refunds" },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActivityFilter(tab.id)}
-                  className={`px-2.5 py-1 rounded-xl transition cursor-pointer ${
-                    activityFilter === tab.id
-                      ? "bg-blue-600 text-white shadow-xs"
-                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Scrollable Activities Stream */}
-            <div className="space-y-3 max-h-[580px] overflow-y-auto pr-1">
-              {filteredActivities.length === 0 ? (
-                <div className="py-8 text-center text-slate-400 text-xs">
-                  No activity events found in this filter.
-                </div>
-              ) : (
-                filteredActivities.map((act, idx) => (
-                  <div
-                    key={act._id || idx}
-                    className="p-3 rounded-2xl bg-slate-50/70 border border-slate-200/70 space-y-1.5 hover:bg-blue-50/20 hover:border-blue-200 transition"
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="border-b border-slate-100 bg-slate-50/70 text-[10px] font-black text-slate-400 uppercase tracking-wider">
+                <th className="py-3 px-4 sm:px-6">Order ID</th>
+                <th className="py-3 px-4">Customer</th>
+                <th className="py-3 px-4">Total</th>
+                <th className="py-3 px-4">Delivery Status</th>
+                <th className="py-3 px-4">Date & Exact Time</th>
+                <th className="py-3 px-4 sm:px-6 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {orders.slice(0, 8).map((order) => {
+                const dt = formatExactDateTime(order.createdAt);
+                return (
+                  <tr
+                    key={order._id}
+                    className="hover:bg-blue-50/30 transition group cursor-pointer"
+                    onClick={() => setSelectedOrder(order)}
                   >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-start gap-2.5 min-w-0">
-                        <div
-                          className={`p-1.5 rounded-xl shrink-0 border mt-0.5 ${getActivityBg(
-                            act.type
-                          )}`}
-                        >
-                          {getActivityIcon(act.type)}
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-xs font-black text-slate-900 leading-snug">
-                            {act.title}
-                          </p>
-                          <p className="text-[11px] text-slate-600 leading-relaxed mt-0.5">
-                            {act.description}
-                          </p>
-                        </div>
+                    <td className="py-3.5 px-4 sm:px-6">
+                      <span className="font-mono font-black text-slate-900 group-hover:text-blue-600 transition">
+                        #{order.orderNumber}
+                      </span>
+                    </td>
+
+                    <td className="py-3.5 px-4">
+                      <div>
+                        <p className="font-bold text-slate-900">
+                          {order.customerSnapshot?.name || "Tamale Customer"}
+                        </p>
+                        <p className="text-[10px] text-slate-400">
+                          {order.deliveryAddress?.area || "Tamale Central"}
+                        </p>
                       </div>
-                    </div>
+                    </td>
 
-                    <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium pt-1 border-t border-slate-100/80">
-                      <span className="text-slate-500 font-semibold truncate">
-                        {act.actorName ? `By ${act.actorName}` : "System Event"}
+                    <td className="py-3.5 px-4">
+                      <span className="font-mono font-black text-slate-900">
+                        {formatGHS(order.totalAmount)}
                       </span>
-                      <span className="shrink-0 font-mono">
-                        {formatRelativeTime(act.createdAt)}
-                      </span>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
+                    </td>
 
-            <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-              <span className="text-slate-400 text-[11px]">Audit log streaming</span>
-              <Link
-                href="/admin/audit"
-                className="font-bold text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1"
-              >
-                <span>Audit Logs</span>
-                <ArrowRight className="h-3 w-3" />
-              </Link>
-            </div>
-          </div>
+                    <td className="py-3.5 px-4">{getStatusBadge(order.status)}</td>
 
-          {/* QUICK SHORTCUTS CARD */}
-          <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-card space-y-3">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">
-              Marketplace Operations
-            </span>
-            <div className="grid grid-cols-2 gap-2 text-xs font-bold">
-              <Link
-                href="/admin/sellers"
-                className="p-3 bg-slate-50 hover:bg-blue-50 rounded-2xl border border-slate-200/80 text-slate-700 hover:text-blue-700 transition block text-center"
-              >
-                Review Sellers
-              </Link>
-              <Link
-                href="/admin/delivery"
-                className="p-3 bg-slate-50 hover:bg-blue-50 rounded-2xl border border-slate-200/80 text-slate-700 hover:text-blue-700 transition block text-center"
-              >
-                Delivery Fleet
-              </Link>
-              <Link
-                href="/admin/payouts"
-                className="p-3 bg-slate-50 hover:bg-blue-50 rounded-2xl border border-slate-200/80 text-slate-700 hover:text-blue-700 transition block text-center"
-              >
-                MoMo Escrow
-              </Link>
-              <Link
-                href="/admin/products"
-                className="p-3 bg-slate-50 hover:bg-blue-50 rounded-2xl border border-slate-200/80 text-slate-700 hover:text-blue-700 transition block text-center"
-              >
-                Catalog Moderation
-              </Link>
-            </div>
-          </div>
+                    <td className="py-3.5 px-4">
+                      <div className="font-mono">
+                        <p className="font-bold text-slate-700">{dt.date}</p>
+                        <p className="text-[10px] text-slate-400 flex items-center gap-1">
+                          <Clock className="h-2.5 w-2.5 text-slate-400" />
+                          <span>{dt.time}</span>
+                        </p>
+                      </div>
+                    </td>
+
+                    <td className="py-3.5 px-4 sm:px-6 text-right">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedOrder(order);
+                        }}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 rounded-xl text-xs font-bold transition shadow-xs cursor-pointer group-hover:bg-blue-600 group-hover:text-white"
+                      >
+                        <Eye className="h-3 w-3" />
+                        <span>View</span>
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="p-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between text-xs text-slate-500">
+          <span>Showing latest customer orders</span>
+          <Link
+            href="/admin/orders"
+            className="font-bold text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1"
+          >
+            <span>Fulfill Orders ({orders.length})</span>
+            <ArrowRight className="h-3 w-3" />
+          </Link>
+        </div>
+      </div>
+
+      {/* QUICK OPERATIONS SHORTCUTS BAR */}
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-4 sm:p-5 shadow-card space-y-3">
+        <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">
+          Quick Operations Hub
+        </span>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-bold">
+          <Link
+            href="/admin/orders"
+            className="p-3 bg-slate-50 hover:bg-blue-50 rounded-2xl border border-slate-200/80 text-slate-700 hover:text-blue-700 transition block text-center"
+          >
+            Orders Queue
+          </Link>
+          <Link
+            href="/admin/customers"
+            className="p-3 bg-slate-50 hover:bg-blue-50 rounded-2xl border border-slate-200/80 text-slate-700 hover:text-blue-700 transition block text-center"
+          >
+            Customers Directory
+          </Link>
+          <Link
+            href="/admin/activity"
+            className="p-3 bg-slate-50 hover:bg-blue-50 rounded-2xl border border-slate-200/80 text-slate-700 hover:text-blue-700 transition block text-center"
+          >
+            Operations Activity
+          </Link>
+          <Link
+            href="/admin/sellers"
+            className="p-3 bg-slate-50 hover:bg-blue-50 rounded-2xl border border-slate-200/80 text-slate-700 hover:text-blue-700 transition block text-center"
+          >
+            Verified Sellers
+          </Link>
         </div>
       </div>
 
