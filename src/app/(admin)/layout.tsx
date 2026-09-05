@@ -37,14 +37,14 @@ export default function AdminLayout({
   const navItems = [
     { label: "Dashboard", href: "/admin", icon: LayoutDashboard, exact: true },
     { label: "Orders", href: "/admin/orders", icon: ShoppingBag },
-    { label: "Customers", href: "/admin/customers", icon: Users },
-    { label: "Operations Activity", href: "/admin/activity", icon: ActivityIcon },
     { label: "Stores & Sellers", href: "/admin/sellers", icon: Store },
+    { label: "Customers", href: "/admin/customers", icon: Users },
+    { label: "Delivery & Fleet", href: "/admin/delivery", icon: Truck },
     { label: "Products Catalog", href: "/admin/products", icon: Package },
     { label: "Categories", href: "/admin/categories", icon: Tag },
-    { label: "Delivery & Fleet", href: "/admin/delivery", icon: Truck },
-    { label: "Disputes", href: "/admin/disputes", icon: AlertCircle },
     { label: "Finance & Payouts", href: "/admin/payouts", icon: DollarSign },
+    { label: "Disputes", href: "/admin/disputes", icon: AlertCircle },
+    { label: "Operations Activity", href: "/admin/activity", icon: ActivityIcon },
     { label: "Platform Settings", href: "/admin/settings", icon: Settings },
   ];
 
