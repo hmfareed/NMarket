@@ -17,12 +17,15 @@ export interface IAddress {
   region: string;
   city: string;
   area: string;
+  streetAddress?: string;
+  formattedAddress?: string;
   landmark?: string;
   deliveryInstructions?: string;
   location?: {
     type: "Point";
     coordinates: [number, number]; // [longitude, latitude]
   };
+  accuracyMeters?: number;
   isDefault: boolean;
 }
 
@@ -69,6 +72,8 @@ const AddressSchema = new Schema<IAddress>(
     region: { type: String, required: true, default: "Northern Region" },
     city: { type: String, required: true, default: "Tamale" },
     area: { type: String, required: true },
+    streetAddress: { type: String },
+    formattedAddress: { type: String },
     landmark: { type: String },
     deliveryInstructions: { type: String },
     location: {
@@ -81,6 +86,7 @@ const AddressSchema = new Schema<IAddress>(
         type: [Number], // [longitude, latitude]
       },
     },
+    accuracyMeters: { type: Number },
     isDefault: { type: Boolean, default: false },
   },
   { _id: true }

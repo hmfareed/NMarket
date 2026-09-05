@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { formatGHS } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
+import { useLocation } from "@/context/LocationContext";
 import CustomerHeader from "@/components/customer/CustomerHeader";
 import MegaCategoryNav, { MEGA_CATEGORIES } from "@/components/customer/MegaCategoryNav";
 
@@ -99,7 +100,7 @@ export default function CustomerMarketplace() {
   const [selectedStore, setSelectedStore] = useState<string>("");
   const [boardViewMode, setBoardViewMode] = useState<BoardViewMode>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedArea, setSelectedArea] = useState("Tamale Central");
+  const { selectedArea, setSelectedArea } = useLocation();
   const [loading, setLoading] = useState(true);
 
   // Flash deals countdown state

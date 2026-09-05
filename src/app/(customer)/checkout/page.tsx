@@ -14,8 +14,10 @@ import {
   Loader2,
   CheckCircle2,
   ShoppingBag,
+  Crosshair,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useLocation } from "@/context/LocationContext";
 import { TAMALE_AREAS } from "@/lib/constants/tamale-areas";
 import { calculateTamaleDeliveryFee } from "@/lib/delivery-fee";
 import { formatGHS } from "@/lib/utils";
@@ -23,6 +25,7 @@ import { formatGHS } from "@/lib/utils";
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, subtotal, clearCart } = useCart();
+  const { openLocationPrompt, currentLocation } = useLocation();
 
   const [recipient, setRecipient] = useState("");
   const [phone, setPhone] = useState("");
@@ -43,8 +46,14 @@ export default function CheckoutPage() {
     recipient: string;
     phone: string;
     area: string;
-    pickupAddress: string;
+    pickupAddress?: string;
+    streetAddress?: string;
+    formattedAddress?: string;
     landmark?: string;
+    location?: {
+      type: "Point";
+      coordinates: [number, number];
+    };
     isDefault?: boolean;
   }
   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
@@ -65,14 +74,19 @@ export default function CheckoutPage() {
             setRecipient(defaultAddr.recipient);
             setPhone(defaultAddr.phone);
             setArea(defaultAddr.area);
-            setPickupAddress(defaultAddr.pickupAddress);
+            setPickupAddress(defaultAddr.streetAddress || defaultAddr.pickupAddress || defaultAddr.formattedAddress || "");
             if (defaultAddr.landmark) setLandmark(defaultAddr.landmark);
+          } else if (currentLocation) {
+            if (currentLocation.area) setArea(currentLocation.area);
+            if (currentLocation.streetAddress || currentLocation.formattedAddress) {
+              setPickupAddress(currentLocation.streetAddress || currentLocation.formattedAddress || "");
+            }
           }
         }
       } catch {}
     }
     loadAddresses();
-  }, []);
+  }, [currentLocation]);
 
   // Group items by seller
   const uniqueStoreCount = new Set(items.map((i) => i.storeId || "default")).size;
@@ -113,8 +127,15 @@ export default function CheckoutPage() {
             phone,
             area,
             pickupAddress,
+            streetAddress: pickupAddress,
             landmark,
             deliveryInstructions,
+            location: currentLocation?.coordinates
+              ? {
+                  type: "Point",
+                  coordinates: currentLocation.coordinates,
+                }
+              : undefined,
           },
           paymentMethod: "MOBILE_MONEY",
           momoNetwork,
@@ -152,9 +173,17 @@ export default function CheckoutPage() {
             recipient,
             phone,
             area,
+            streetAddress: pickupAddress,
             pickupAddress,
             landmark,
             deliveryInstructions,
+            location: currentLocation?.coordinates
+              ? {
+                  type: "Point",
+                  coordinates: currentLocation.coordinates,
+                }
+              : undefined,
+            accuracyMeters: currentLocation?.accuracyMeters,
           }),
         }).catch(() => {});
       }
@@ -235,9 +264,19 @@ export default function CheckoutPage() {
             <div className="lg:col-span-7 space-y-5">
               {/* Section 1: Tamale Delivery Destination */}
               <div className="bg-white rounded-3xl border border-slate-200 p-6 space-y-4 shadow-xs">
-                <div className="flex items-center gap-2 text-sm font-bold text-slate-900 border-b border-slate-100 pb-3">
-                  <MapPin className="h-4 w-4 text-emerald-600" />
-                  <span>Delivery Address in Tamale</span>
+                <div className="flex items-center justify-between gap-2 text-sm font-bold text-slate-900 border-b border-slate-100 pb-3">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-emerald-600" />
+                    <span>Delivery Address in Tamale</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={openLocationPrompt}
+                    className="flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-xl border border-emerald-200 transition cursor-pointer"
+                  >
+                    <Crosshair className="h-3.5 w-3.5 text-emerald-600 animate-pulse" />
+                    <span>{currentLocation?.isGpsVerified ? `GPS Locked (±${currentLocation.accuracyMeters || 4}m)` : "Detect Exact GPS"}</span>
+                  </button>
                 </div>
 
                 {/* Saved Tamale Address Selector */}
@@ -256,7 +295,7 @@ export default function CheckoutPage() {
                             setRecipient(addr.recipient);
                             setPhone(addr.phone);
                             setArea(addr.area);
-                            setPickupAddress(addr.pickupAddress);
+                            setPickupAddress(addr.streetAddress || addr.pickupAddress || addr.formattedAddress || "");
                             if (addr.landmark) setLandmark(addr.landmark);
                           }}
                           className={`px-3 py-1.5 rounded-xl text-xs font-bold transition border text-left ${

@@ -12,9 +12,11 @@ import {
   User,
   Store,
   Package,
+  Crosshair,
 } from "lucide-react";
 import Logo from "@/components/brand/Logo";
 import { useCart } from "@/context/CartContext";
+import { useLocation } from "@/context/LocationContext";
 
 interface CustomerHeaderProps {
   onOpenCart?: () => void;
@@ -28,10 +30,18 @@ export default function CustomerHeader({
   onOpenCart,
   searchQuery = "",
   onSearchChange,
-  selectedArea = "Tamale Central",
+  selectedArea: propSelectedArea,
   onAreaChange,
 }: CustomerHeaderProps) {
   const { itemCount } = useCart();
+  const {
+    selectedArea: contextSelectedArea,
+    setSelectedArea: setContextSelectedArea,
+    openLocationPrompt,
+    currentLocation,
+  } = useLocation();
+
+  const selectedArea = propSelectedArea || contextSelectedArea || "Tamale Central";
   const [userName, setUserName] = useState<string | null>(null);
   const [showAreaDropdown, setShowAreaDropdown] = useState(false);
 
@@ -102,16 +112,32 @@ export default function CustomerHeader({
                   <button
                     type="button"
                     onClick={() => setShowAreaDropdown(!showAreaDropdown)}
-                    className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700 transition cursor-pointer"
+                    className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 hover:text-emerald-700 transition cursor-pointer"
                   >
                     <MapPin className="h-3 w-3 shrink-0" />
                     <span className="truncate max-w-[130px]">Deliver to {selectedArea}</span>
+                    {currentLocation?.isGpsVerified && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" title="GPS Pinpointed" />
+                    )}
                     <ChevronDown className="h-2.5 w-2.5 shrink-0" />
                   </button>
 
                   {showAreaDropdown && (
-                    <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-2xl shadow-elevated border border-slate-200 py-1.5 z-50 animate-in fade-in slide-in-from-top-1">
-                      <div className="px-3 py-1 text-[9px] font-black text-slate-400 uppercase tracking-wider">
+                    <div className="absolute top-full left-0 mt-1 w-52 bg-white rounded-2xl shadow-elevated border border-slate-200 p-1.5 z-50 animate-in fade-in slide-in-from-top-1">
+                      {/* Exact GPS Action Button */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowAreaDropdown(false);
+                          openLocationPrompt();
+                        }}
+                        className="w-full mb-1.5 flex items-center gap-2 px-2.5 py-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 rounded-xl transition cursor-pointer border border-emerald-200"
+                      >
+                        <Crosshair className="h-3.5 w-3.5 text-emerald-600 animate-pulse shrink-0" />
+                        <span className="text-left text-[11px] leading-tight font-extrabold">Track Exact GPS Location</span>
+                      </button>
+
+                      <div className="px-2 py-0.5 text-[9px] font-black text-slate-400 uppercase tracking-wider">
                         Tamale Delivery Area
                       </div>
                       {tamaleAreas.map((area) => (
@@ -120,11 +146,12 @@ export default function CustomerHeader({
                           type="button"
                           onClick={() => {
                             onAreaChange?.(area);
+                            setContextSelectedArea(area);
                             setShowAreaDropdown(false);
                           }}
-                          className={`w-full text-left px-3 py-1.5 text-xs font-bold transition hover:bg-blue-50 hover:text-blue-700 ${
+                          className={`w-full text-left px-2.5 py-1.5 text-xs font-bold rounded-lg transition hover:bg-emerald-50 hover:text-emerald-700 ${
                             selectedArea === area
-                              ? "text-blue-600 bg-blue-50/60 font-black"
+                              ? "text-emerald-600 bg-emerald-50/60 font-black"
                               : "text-slate-700"
                           }`}
                         >
@@ -146,15 +173,31 @@ export default function CustomerHeader({
                 <button
                   type="button"
                   onClick={() => setShowAreaDropdown(!showAreaDropdown)}
-                  className="flex items-center gap-1 font-bold text-blue-600 hover:text-blue-700 transition cursor-pointer"
+                  className="flex items-center gap-1 font-bold text-emerald-600 hover:text-emerald-700 transition cursor-pointer"
                 >
-                  <MapPin className="h-3.5 w-3.5 text-blue-600" />
+                  <MapPin className="h-3.5 w-3.5 text-emerald-600" />
                   <span>Deliver to {selectedArea}</span>
+                  {currentLocation?.isGpsVerified && (
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="GPS Pinpointed" />
+                  )}
                   <ChevronDown className="h-3 w-3" />
                 </button>
 
                 {showAreaDropdown && (
-                  <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-2xl shadow-elevated border border-slate-200 py-1.5 z-50 animate-in fade-in slide-in-from-top-1">
+                  <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-2xl shadow-elevated border border-slate-200 p-1.5 z-50 animate-in fade-in slide-in-from-top-1">
+                    {/* Exact GPS Action Button */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowAreaDropdown(false);
+                        openLocationPrompt();
+                      }}
+                      className="w-full mb-1.5 flex items-center gap-2 px-3 py-2 text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 rounded-xl transition cursor-pointer border border-emerald-200"
+                    >
+                      <Crosshair className="h-4 w-4 text-emerald-600 animate-pulse shrink-0" />
+                      <span className="text-left leading-tight font-extrabold">Track Exact GPS Pinpoint</span>
+                    </button>
+
                     <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                       Select Tamale Area
                     </div>
@@ -164,11 +207,12 @@ export default function CustomerHeader({
                         type="button"
                         onClick={() => {
                           onAreaChange?.(area);
+                          setContextSelectedArea(area);
                           setShowAreaDropdown(false);
                         }}
-                        className={`w-full text-left px-3 py-1.5 text-xs font-bold transition hover:bg-blue-50 hover:text-blue-700 ${
+                        className={`w-full text-left px-3 py-1.5 text-xs font-bold rounded-lg transition hover:bg-emerald-50 hover:text-emerald-700 ${
                           selectedArea === area
-                            ? "text-blue-600 bg-blue-50/60 font-black"
+                            ? "text-emerald-600 bg-emerald-50/60 font-black"
                             : "text-slate-700"
                         }`}
                       >

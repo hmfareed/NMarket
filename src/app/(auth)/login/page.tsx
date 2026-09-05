@@ -46,7 +46,15 @@ function LoginContent() {
 
       // Navigate to redirect URL or role dashboard
       const target = redirectPath || data.redirectTo || "/";
-      router.push(target);
+
+      // If customer logging into marketplace, trigger immediate GPS location prompt
+      if (typeof window !== "undefined" && (data.user?.role === "CUSTOMER" || target === "/" || target.startsWith("/?"))) {
+        sessionStorage.setItem("nmarket_just_logged_in", "true");
+        const separator = target.includes("?") ? "&" : "?";
+        router.push(`${target}${separator}loginPromptLocation=1`);
+      } else {
+        router.push(target);
+      }
       router.refresh();
     } catch (err) {
       setError((err as Error).message);

@@ -37,14 +37,23 @@ export async function POST(req: Request) {
       phone,
       area,
       pickupAddress,
+      streetAddress,
+      formattedAddress,
       landmark,
       deliveryInstructions,
+      location,
+      coordinates,
+      accuracyMeters,
+      region = "Northern Region",
+      city = "Tamale",
       isDefault = false,
     } = body;
 
-    if (!recipient || !phone || !area || !pickupAddress) {
+    const resolvedStreetAddress = streetAddress || pickupAddress || formattedAddress;
+
+    if (!recipient || !phone || !area || !resolvedStreetAddress) {
       return NextResponse.json(
-        { error: "Recipient name, phone, area, and delivery address are required." },
+        { error: "Recipient name, phone, area, and street address are required." },
         { status: 400 }
       );
     }
@@ -65,23 +74,45 @@ export async function POST(req: Request) {
       });
     }
 
-    user.addresses.push({
+    // Build location object if coordinates provided
+    let locationObj: { type: "Point"; coordinates: [number, number] } | undefined = undefined;
+    if (location?.coordinates && Array.isArray(location.coordinates) && location.coordinates.length === 2) {
+      locationObj = {
+        type: "Point",
+        coordinates: [Number(location.coordinates[0]), Number(location.coordinates[1])],
+      };
+    } else if (Array.isArray(coordinates) && coordinates.length === 2) {
+      locationObj = {
+        type: "Point",
+        coordinates: [Number(coordinates[0]), Number(coordinates[1])],
+      };
+    }
+
+    const newAddress = {
       label,
       recipient: recipient.trim(),
       phone: phone.trim(),
-      region: "Northern Region",
-      city: "Tamale",
+      region: region || "Northern Region",
+      city: city || "Tamale",
       area: area.trim(),
+      streetAddress: resolvedStreetAddress.trim(),
+      formattedAddress: formattedAddress ? formattedAddress.trim() : resolvedStreetAddress.trim(),
       landmark: landmark?.trim(),
       deliveryInstructions: deliveryInstructions?.trim(),
+      location: locationObj,
+      accuracyMeters: typeof accuracyMeters === "number" ? accuracyMeters : undefined,
       isDefault: isDefault || user.addresses.length === 0,
-    });
+    };
 
+    user.addresses.push(newAddress);
     await user.save();
+
+    const savedAddr = user.addresses[user.addresses.length - 1];
 
     return NextResponse.json({
       success: true,
       message: "Address saved successfully!",
+      address: savedAddr,
       addresses: user.addresses,
     });
   } catch (error) {
