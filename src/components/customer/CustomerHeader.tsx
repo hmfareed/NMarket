@@ -69,10 +69,10 @@ export default function CustomerHeader({
   return (
     <header className="bg-white border-b border-slate-200/80 sticky top-0 z-30 shadow-xs">
       {/* Slim pilot banner */}
-      <div className="bg-dark-900 text-amber-400 text-[10px] sm:text-xs py-1 px-3 text-center font-medium tracking-wide flex items-center justify-center gap-1.5">
+      <div className="bg-slate-900 text-blue-300 text-[10px] sm:text-xs py-1 px-3 text-center font-medium tracking-wide flex items-center justify-center gap-1.5">
         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
         <span className="truncate">
-          🇬🇭 <strong className="text-white">Tamale Pilot:</strong> 45-min delivery across Tamale Metropolis
+          🇬🇭 <strong className="text-white">Tamale Marketplace:</strong> Fast 45–90 min delivery across Tamale Metropolis
         </span>
       </div>
 
@@ -102,7 +102,7 @@ export default function CustomerHeader({
                   <button
                     type="button"
                     onClick={() => setShowAreaDropdown(!showAreaDropdown)}
-                    className="flex items-center gap-1 text-[10px] font-bold text-amber-600 hover:text-amber-700 transition cursor-pointer"
+                    className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700 transition cursor-pointer"
                   >
                     <MapPin className="h-3 w-3 shrink-0" />
                     <span className="truncate max-w-[130px]">Deliver to {selectedArea}</span>
@@ -122,9 +122,9 @@ export default function CustomerHeader({
                             onAreaChange?.(area);
                             setShowAreaDropdown(false);
                           }}
-                          className={`w-full text-left px-3 py-1.5 text-xs font-bold transition hover:bg-amber-50 hover:text-amber-700 ${
+                          className={`w-full text-left px-3 py-1.5 text-xs font-bold transition hover:bg-blue-50 hover:text-blue-700 ${
                             selectedArea === area
-                              ? "text-amber-600 bg-amber-50/60"
+                              ? "text-blue-600 bg-blue-50/60 font-black"
                               : "text-slate-700"
                           }`}
                         >
@@ -146,9 +146,9 @@ export default function CustomerHeader({
                 <button
                   type="button"
                   onClick={() => setShowAreaDropdown(!showAreaDropdown)}
-                  className="flex items-center gap-1 font-bold text-amber-600 hover:text-amber-700 transition cursor-pointer"
+                  className="flex items-center gap-1 font-bold text-blue-600 hover:text-blue-700 transition cursor-pointer"
                 >
-                  <MapPin className="h-3.5 w-3.5" />
+                  <MapPin className="h-3.5 w-3.5 text-blue-600" />
                   <span>Deliver to {selectedArea}</span>
                   <ChevronDown className="h-3 w-3" />
                 </button>
@@ -166,9 +166,9 @@ export default function CustomerHeader({
                           onAreaChange?.(area);
                           setShowAreaDropdown(false);
                         }}
-                        className={`w-full text-left px-3 py-1.5 text-xs font-bold transition hover:bg-amber-50 hover:text-amber-700 ${
+                        className={`w-full text-left px-3 py-1.5 text-xs font-bold transition hover:bg-blue-50 hover:text-blue-700 ${
                           selectedArea === area
-                            ? "text-amber-600 bg-amber-50/60"
+                            ? "text-blue-600 bg-blue-50/60 font-black"
                             : "text-slate-700"
                         }`}
                       >
@@ -185,15 +185,15 @@ export default function CustomerHeader({
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <Link
               href="/seller"
-              className="hidden lg:flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-amber-600 px-3 py-1.5 rounded-xl hover:bg-slate-50 transition"
+              className="hidden lg:flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-blue-600 px-3 py-1.5 rounded-xl hover:bg-slate-50 transition"
             >
-              <Store className="h-4 w-4 text-amber-500" />
+              <Store className="h-4 w-4 text-blue-600" />
               <span>Sell on NorthMarket</span>
             </Link>
 
             <Link
               href="/orders"
-              className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-amber-600 px-3 py-1.5 rounded-xl hover:bg-slate-50 transition"
+              className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-blue-600 px-3 py-1.5 rounded-xl hover:bg-slate-50 transition"
             >
               <Package className="h-4 w-4 text-slate-500" />
               <span>Orders</span>
@@ -205,7 +205,7 @@ export default function CustomerHeader({
               title="Notifications"
             >
               <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-500 rounded-full" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-blue-600 rounded-full" />
             </Link>
 
             <Link
@@ -220,12 +220,12 @@ export default function CustomerHeader({
             <button
               onClick={onOpenCart}
               type="button"
-              className="relative flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-black text-xs px-3 sm:px-4 py-2 rounded-xl shadow-xs transition transform active:scale-95"
+              className="relative flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-black text-xs px-3 sm:px-4 py-2 rounded-xl shadow-xs transition transform active:scale-95"
             >
               <ShoppingBag className="h-4 w-4" />
               <span className="hidden sm:inline">Cart</span>
               {itemCount > 0 && (
-                <span className="bg-dark-900 text-amber-400 text-[10px] font-black px-1.5 py-0.2 rounded-full font-mono">
+                <span className="bg-white text-blue-700 text-[10px] font-black px-1.5 py-0.2 rounded-full font-mono shadow-xs">
                   {itemCount}
                 </span>
               )}
@@ -243,12 +243,12 @@ export default function CustomerHeader({
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
                 placeholder="Search products, stores, local foods in Tamale..."
-                className="w-full bg-slate-50 hover:bg-slate-100/80 focus:bg-white border border-slate-200 rounded-2xl pl-10 pr-4 py-2 text-xs text-slate-800 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 transition shadow-xs"
+                className="w-full bg-slate-50 hover:bg-slate-100/80 focus:bg-white border border-slate-200 rounded-2xl pl-10 pr-4 py-2 text-xs text-slate-800 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition shadow-xs"
               />
             </div>
             <Link
               href="/categories"
-              className="p-2 bg-slate-50 border border-slate-200 hover:border-amber-400 rounded-2xl text-slate-600 hover:text-amber-600 transition shadow-xs shrink-0"
+              className="p-2 bg-slate-50 border border-slate-200 hover:border-blue-400 rounded-2xl text-slate-600 hover:text-blue-600 transition shadow-xs shrink-0"
               title="Filter by Categories"
             >
               <SlidersHorizontal className="h-4 w-4" />

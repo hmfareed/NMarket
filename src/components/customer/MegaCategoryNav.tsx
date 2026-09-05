@@ -529,13 +529,13 @@ export default function MegaCategoryNav({
                   onClick={() => onSelectCategory?.(cat.name)}
                   className={`group flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl transition-all duration-150 cursor-pointer ${
                     isHovered || isSelected
-                      ? "text-amber-600 bg-amber-50/80 font-bold"
-                      : "text-slate-600 hover:text-amber-600 hover:bg-slate-50"
+                      ? "text-blue-600 bg-blue-50/80 font-bold"
+                      : "text-slate-600 hover:text-blue-600 hover:bg-slate-50"
                   }`}
                 >
                   <Icon
                     className={`h-4 w-4 transition-transform duration-150 group-hover:scale-110 ${
-                      isHovered || isSelected ? "text-amber-600 stroke-[2.2]" : "text-slate-500 group-hover:text-amber-600"
+                      isHovered || isSelected ? "text-blue-600 stroke-[2.2]" : "text-slate-500 group-hover:text-blue-600"
                     }`}
                   />
                   <span className="whitespace-nowrap tracking-tight">{cat.name}</span>
@@ -551,7 +551,7 @@ export default function MegaCategoryNav({
 
           <Link
             href="/categories"
-            className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold text-slate-500 hover:text-amber-600 rounded-xl hover:bg-slate-50 transition shrink-0"
+            className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold text-slate-500 hover:text-blue-600 rounded-xl hover:bg-slate-50 transition shrink-0"
           >
             <span>All Categories</span>
             <ChevronRight className="h-3.5 w-3.5" />
@@ -591,7 +591,7 @@ export default function MegaCategoryNav({
                   onSelectCategory?.(hoveredCategory.name);
                   setHoveredCategory(null);
                 }}
-                className="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1"
+                className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
               >
                 <span>View all in {hoveredCategory.name}</span>
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -615,7 +615,7 @@ export default function MegaCategoryNav({
                             onSelectSubcategory?.(item, hoveredCategory.name);
                             setHoveredCategory(null);
                           }}
-                          className="text-xs text-slate-600 hover:text-amber-600 hover:translate-x-1 font-medium transition-all duration-150 text-left block w-full truncate py-0.5"
+                          className="text-xs text-slate-600 hover:text-blue-600 hover:translate-x-1 font-medium transition-all duration-150 text-left block w-full truncate py-0.5"
                         >
                           {item}
                         </button>
