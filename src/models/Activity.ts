@@ -11,12 +11,13 @@ export interface IActivity extends Document {
     | "CART_ITEM_REMOVED"
     | "REFUND_REQUESTED"
     | "STORE_VERIFIED"
-    | "PRODUCT_PRICE_UPDATED";
+    | "PRODUCT_PRICE_UPDATED"
+    | "ORDER_DELIVERY_ASSIGNED";
   category: "ORDERS" | "STORE" | "CART" | "REFUNDS" | "SYSTEM";
   title: string;
   description: string;
   entityId?: string;
-  entityType?: "ORDER" | "STORE" | "USER" | "PRODUCT" | "CART";
+  entityType?: "ORDER" | "STORE" | "USER" | "PRODUCT" | "CART" | "DELIVERY";
   actorName?: string;
   actorRole?: string;
   metadata?: Record<string, any>;
@@ -49,7 +50,7 @@ const ActivitySchema = new Schema<IActivity>(
     },
     entityType: {
       type: String,
-      enum: ["ORDER", "STORE", "USER", "PRODUCT", "CART"],
+      enum: ["ORDER", "STORE", "USER", "PRODUCT", "CART", "DELIVERY"],
     },
     actorName: {
       type: String,
