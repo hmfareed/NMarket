@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   MapPin,
   Search,
@@ -91,17 +92,39 @@ interface StoreData {
 
 type BoardViewMode = "ALL" | "FLASH_DEALS" | "UNDER_100" | "TOP_RATED" | "FAST_DISPATCH";
 
-export default function CustomerMarketplace() {
+function CustomerMarketplaceContent() {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get("category");
+  const subcategoryParam = searchParams.get("subcategory");
+  const qParam = searchParams.get("q");
+
   const [categories, setCategories] = useState<CategoryData[]>([]);
   const [products, setProducts] = useState<ProductData[]>([]);
   const [stores, setStores] = useState<StoreData[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>(categoryParam || "all");
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>(subcategoryParam || "");
   const [selectedStore, setSelectedStore] = useState<string>("");
   const [boardViewMode, setBoardViewMode] = useState<BoardViewMode>("ALL");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(qParam || "");
   const { selectedArea, setSelectedArea } = useLocation();
   const [loading, setLoading] = useState(true);
+
+  // Sync category, subcategory and search from query params
+  useEffect(() => {
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+      if (subcategoryParam) {
+        setSelectedSubcategory(subcategoryParam);
+      }
+      setTimeout(() => {
+        const el = document.getElementById("product-board");
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
+    if (qParam) {
+      setSearchQuery(qParam);
+    }
+  }, [categoryParam, subcategoryParam, qParam]);
 
   // Flash deals countdown state
   const [timeLeft, setTimeLeft] = useState({ hours: 4, minutes: 28, seconds: 15 });
@@ -235,6 +258,33 @@ export default function CustomerMarketplace() {
     setSearchQuery("");
   };
 
+  // Category & subcategory click handlers with smooth auto-scroll to results
+  const handleSelectCategory = (catName: string) => {
+    if (catName === "Official Stores") {
+      const el = document.getElementById("stores-section");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+    setSelectedCategory(catName);
+    setSelectedSubcategory("");
+    setSelectedStore("");
+    setSearchQuery("");
+    setTimeout(() => {
+      const el = document.getElementById("product-board");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }, 50);
+  };
+
+  const handleSelectSubcategory = (subName: string, catName: string) => {
+    setSelectedCategory(catName);
+    setSelectedSubcategory(subName);
+    setSelectedStore("");
+    setTimeout(() => {
+      const el = document.getElementById("product-board");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }, 50);
+  };
+
   // Helper to find cart item quantity for a product
   const getCartItemQty = (productId: string) => {
     const found = cartItems.find((i) => i.productId === productId);
@@ -255,18 +305,52 @@ export default function CustomerMarketplace() {
       {/* Desktop Big-Screen Mega Category Lineup with Cobalt Hover Dropdowns */}
       <MegaCategoryNav
         activeCategory={selectedCategory}
-        onSelectCategory={(catName) => {
-          setSelectedCategory(catName);
-          setSelectedSubcategory("");
-          setSelectedStore("");
-          setSearchQuery("");
-        }}
-        onSelectSubcategory={(subName, catName) => {
-          setSelectedCategory(catName);
-          setSelectedSubcategory(subName);
-          setSelectedStore("");
-        }}
+        onSelectCategory={handleSelectCategory}
+        onSelectSubcategory={handleSelectSubcategory}
       />
+
+      {/* Mobile Horizontal Quick-Category Strip */}
+      <div className="md:hidden bg-white border-b border-slate-200/80 px-3 py-2 overflow-x-auto scrollbar-none shadow-xs">
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => handleSelectCategory("all")}
+            className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition cursor-pointer shrink-0 ${
+              selectedCategory === "all"
+                ? "bg-slate-900 text-white shadow-xs"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            All Products
+          </button>
+          {MEGA_CATEGORIES.map((cat) => {
+            const Icon = cat.icon;
+            const isSelected = selectedCategory.toLowerCase() === cat.name.toLowerCase();
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => handleSelectCategory(cat.name)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition cursor-pointer shrink-0 ${
+                  isSelected
+                    ? "bg-blue-600 text-white shadow-xs"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }`}
+              >
+                <Icon className={`h-3.5 w-3.5 ${isSelected ? "text-white" : "text-slate-500"}`} />
+                <span>{cat.name}</span>
+              </button>
+            );
+          })}
+          <Link
+            href="/categories"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 whitespace-nowrap transition shrink-0"
+          >
+            <span>All Categories</span>
+            <ChevronRight className="h-3 w-3" />
+          </Link>
+        </div>
+      </div>
 
       {/* Main Marketplace Canvas */}
       <main className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 space-y-6 flex-1">
@@ -978,5 +1062,22 @@ export default function CustomerMarketplace() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function CustomerMarketplace() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center">
+          <div className="flex flex-col items-center gap-2">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+            <p className="text-xs text-slate-500 font-bold">Loading NorthMarket Tamale...</p>
+          </div>
+        </div>
+      }
+    >
+      <CustomerMarketplaceContent />
+    </Suspense>
   );
 }

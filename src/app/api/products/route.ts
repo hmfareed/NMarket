@@ -22,24 +22,74 @@ export async function GET(req: Request) {
       "inventory.available": { $gt: 0 },
     };
 
+    const andClauses: any[] = [];
+
     if (category && category !== "all") {
-      const cleanCat = category.trim();
-      // Handle slug or compound names like phones-tablets or Health & Beauty
-      const tokens = cleanCat.split(/[\s&-]+/).filter((t) => t.length > 2);
-      if (tokens.length > 0) {
-        query.category = { $regex: tokens.join("|"), $options: "i" };
-      } else {
-        query.category = { $regex: cleanCat, $options: "i" };
+      const cleanCat = category.trim().toLowerCase();
+
+      // Mapping aliases and category groups to capture both slug and display names
+      const categoryMap: Record<string, string[]> = {
+        phones: ["phones-tech", "phone", "smartphone", "charger", "gadget", "audio", "electronics"],
+        electronics: ["phones-tech", "electronic", "appliance", "gadget", "audio", "solar", "tv", "phone"],
+        tech: ["phones-tech", "computer", "laptop", "phone"],
+        computing: ["phones-tech", "computing", "laptop", "computer", "flash drive", "keyboard"],
+        fashion: ["fashion-smocks", "fashion", "smock", "fugu", "textile", "fabric", "cloth", "shoe", "sandal", "slipper"],
+        smocks: ["fashion-smocks", "smock", "fugu", "traditional"],
+        groceries: ["fresh-groceries", "provisions-essentials", "grocery", "yam", "rice", "food", "grain", "produce", "dawadawa", "honey"],
+        food: ["fresh-groceries", "provisions-essentials", "food", "produce", "yam", "rice"],
+        beauty: ["shea-beauty", "shea", "beauty", "cosmetic", "skincare", "soap", "oil", "lotion"],
+        health: ["shea-beauty", "health", "beauty", "organic", "wellness"],
+        shea: ["shea-beauty", "shea", "butter"],
+        home: ["home-solar", "home", "solar", "appliance", "fan", "hardware", "living"],
+        solar: ["home-solar", "solar", "inverter", "fan", "battery"],
+        appliances: ["home-solar", "appliance", "fan", "blender", "kettle", "hardware", "electronics"],
+        provisions: ["provisions-essentials", "fresh-groceries", "provision", "oil", "milk", "canned"],
+        crafts: ["local-crafts", "fashion-smocks", "craft", "heritage", "drum", "leather", "shea-beauty"],
+        sports: ["sports", "sport", "football", "gym", "fitness", "jersey"],
+        baby: ["baby-products", "baby", "kids", "diaper", "toy"],
+        gaming: ["gaming", "phones-tech", "game", "console", "playstation"],
+        accessories: ["fashion-smocks", "phones-tech", "accessory", "accessories", "bag", "leather", "watch", "belt", "case", "charger"],
+        shoes: ["fashion-smocks", "shoe", "shoes", "sandal", "slipper", "footwear", "leather"],
+      };
+
+      const relatedKeywords = new Set<string>();
+      relatedKeywords.add(cleanCat);
+
+      for (const [key, aliases] of Object.entries(categoryMap)) {
+        if (cleanCat.includes(key) || aliases.some((a) => cleanCat.includes(a))) {
+          aliases.forEach((a) => relatedKeywords.add(a));
+          relatedKeywords.add(key);
+        }
       }
+
+      const tokens = Array.from(relatedKeywords)
+        .concat(cleanCat.split(/[\s&,-]+/).filter((t) => t.length > 2))
+        .filter(Boolean);
+
+      const regexPattern = tokens.join("|");
+
+      andClauses.push({
+        $or: [
+          { category: { $regex: regexPattern, $options: "i" } },
+          { name: { $regex: regexPattern, $options: "i" } },
+          { description: { $regex: regexPattern, $options: "i" } },
+        ],
+      });
     }
 
     if (q && q.trim()) {
-      query.$or = [
-        { name: { $regex: q.trim(), $options: "i" } },
-        { description: { $regex: q.trim(), $options: "i" } },
-        { brand: { $regex: q.trim(), $options: "i" } },
-        { category: { $regex: q.trim(), $options: "i" } },
-      ];
+      andClauses.push({
+        $or: [
+          { name: { $regex: q.trim(), $options: "i" } },
+          { description: { $regex: q.trim(), $options: "i" } },
+          { brand: { $regex: q.trim(), $options: "i" } },
+          { category: { $regex: q.trim(), $options: "i" } },
+        ],
+      });
+    }
+
+    if (andClauses.length > 0) {
+      query.$and = andClauses;
     }
 
     if (minPrice || maxPrice) {
